@@ -1,0 +1,45 @@
+/*
+  Design tokens — charcoal-navy with an accent green and flame-red pulled
+  directly from the real logo (the crescent/cross green and the flame red),
+  in place of the gold used before the logo existed.
+*/
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #eff1f4;
+  --ink: #151a22;
+  --ink-muted: #5b6472;
+  --line: #dfe3e8;
+  --navy: #1b2434;
+  --navy-ink: #ffffff;
+  --accent: #1f8423;
+  --accent-soft: #e3f7e4;
+  --accent-ink: #ffffff;
+  --accent-2: #b8291e;
+  --good: #2e7d4f;
+  --danger: #b3432b;
+  --shadow: 0 1px 2px rgba(20, 24, 32, 0.05), 0 8px 24px rgba(20, 24, 32, 0.07);
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Source Sans 3", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #11151c;
+    --surface: #181d26;
+    --surface-2: #1f2530;
+    --ink: #edeff3;
+    --ink-muted: #9aa3b2;
+    --line: #2b323e;
+    --navy: #0d1420;
+    --navy-ink: #edeff3;
+    --accent: #47d14d;
+    --accent-soft: #244c26;
+    --accent-ink: #0d1b0e;
+    --accent-2: #e2645a;
+    --good: #5fcb89;
+    --danger: #e08066;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+}
