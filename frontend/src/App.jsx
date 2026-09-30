@@ -10,7 +10,16 @@ import LocationsPage from "./pages/LocationsPage.jsx";
 import BranchDetailPage from "./pages/BranchDetailPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import AdminLogin from "./admin/AdminLogin.jsx";
-import AdminDashboard from "./admin/AdminDashboard.jsx";
+import AdminLayout from "./admin/AdminLayout.jsx";
+import AdminOverviewPage from "./admin/pages/AdminOverviewPage.jsx";
+import AdminChurchInfoPage from "./admin/pages/AdminChurchInfoPage.jsx";
+import AdminMinistriesPage from "./admin/pages/AdminMinistriesPage.jsx";
+import AdminEventsPage from "./admin/pages/AdminEventsPage.jsx";
+import AdminSermonsPage from "./admin/pages/AdminSermonsPage.jsx";
+import AdminBranchesPage from "./admin/pages/AdminBranchesPage.jsx";
+import AdminLivestreamPage from "./admin/pages/AdminLivestreamPage.jsx";
+import AdminMessagesPage from "./admin/pages/AdminMessagesPage.jsx";
+import AdminAccountPage from "./admin/pages/AdminAccountPage.jsx";
 import RequireAuth from "./admin/RequireAuth.jsx";
 import { AuthProvider } from "./auth/AuthContext.jsx";
 
@@ -64,13 +73,22 @@ export default function App() {
         </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
-          path="/admin"
           element={
             <RequireAuth>
-              <AdminDashboard />
+              <AdminLayout />
             </RequireAuth>
           }
-        />
+        >
+          <Route path="/admin" element={<AdminOverviewPage />} />
+          <Route path="/admin/church-info" element={<AdminChurchInfoPage />} />
+          <Route path="/admin/ministries" element={<AdminMinistriesPage />} />
+          <Route path="/admin/events" element={<AdminEventsPage />} />
+          <Route path="/admin/sermons" element={<AdminSermonsPage />} />
+          <Route path="/admin/branches" element={<AdminBranchesPage />} />
+          <Route path="/admin/livestream" element={<AdminLivestreamPage />} />
+          <Route path="/admin/messages" element={<AdminMessagesPage />} />
+          <Route path="/admin/account" element={<AdminAccountPage />} />
+        </Route>
       </Routes>
     </AuthProvider>
   );

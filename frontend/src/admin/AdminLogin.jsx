@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { adminLogin } from "../api/client.js";
 import { useAuth } from "../auth/AuthContext.jsx";
 import Logo from "../components/Logo.jsx";
@@ -11,6 +11,8 @@ export default function AdminLogin() {
   const [busy, setBusy] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const sessionMessage = location.state?.message;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,6 +37,7 @@ export default function AdminLogin() {
           <h1>Admin Sign In</h1>
         </div>
         <p>Not part of the public site — for church staff to manage content.</p>
+        {sessionMessage && <span className="form-status error">{sessionMessage}</span>}
         <div className="field">
           <label htmlFor="username">Username</label>
           <input id="username" required value={username} onChange={(e) => setUsername(e.target.value)} />

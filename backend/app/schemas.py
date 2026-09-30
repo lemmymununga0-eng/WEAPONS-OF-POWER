@@ -40,6 +40,16 @@ class ChurchInfoOut(BaseModel):
     location: str
     mission: str
     give_details: str
+    airtel_number: str
+    airtel_name: str
+    mtn_number: str
+    mtn_name: str
+    zamtel_number: str
+    zamtel_name: str
+    bank_name: str
+    bank_account_name: str
+    bank_account_number: str
+    bank_branch: str
     phone: str
     whatsapp: str
     email: str
@@ -55,6 +65,16 @@ class ChurchInfoIn(BaseModel):
     location: Optional[str] = None
     mission: Optional[str] = None
     give_details: Optional[str] = None
+    airtel_number: Optional[str] = None
+    airtel_name: Optional[str] = None
+    mtn_number: Optional[str] = None
+    mtn_name: Optional[str] = None
+    zamtel_number: Optional[str] = None
+    zamtel_name: Optional[str] = None
+    bank_name: Optional[str] = None
+    bank_account_name: Optional[str] = None
+    bank_account_number: Optional[str] = None
+    bank_branch: Optional[str] = None
     phone: Optional[str] = None
     whatsapp: Optional[str] = None
     email: Optional[str] = None

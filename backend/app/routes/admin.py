@@ -13,6 +13,7 @@ from ..auth import (
     record_failed_login,
     clear_login_attempts,
 )
+from ..seed import DEFAULT_ADMIN_PASSWORD
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -36,7 +37,10 @@ def login(payload: LoginIn, request: Request, db: Session = Depends(get_db)):
 
 @router.get("/me")
 def me(admin: AdminUser = Depends(get_current_admin)):
-    return {"username": admin.username}
+    return {
+        "username": admin.username,
+        "using_default_password": verify_password(DEFAULT_ADMIN_PASSWORD, admin.hashed_password),
+    }
 
 
 @router.put("/password")

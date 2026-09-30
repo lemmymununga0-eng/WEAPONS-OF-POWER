@@ -1,5 +1,13 @@
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8000";
 
+// Fired whenever an admin-authenticated request comes back 401 (expired or
+// invalid token) — AdminLayout registers a handler that logs out and
+// redirects to /admin/login with an explanatory message.
+let unauthorizedHandler = () => {};
+export function setUnauthorizedHandler(fn) {
+  unauthorizedHandler = fn;
+}
+
 async function handle(res) {
   if (!res.ok) {
     let detail = res.statusText;
@@ -9,6 +17,7 @@ async function handle(res) {
     } catch {
       /* ignore */
     }
+    if (res.status === 401) unauthorizedHandler();
     throw new Error(detail);
   }
   return res.json();
@@ -54,6 +63,8 @@ export const adminLogin = (username, password) =>
   }).then(handle);
 
 const authHeader = (token) => ({ Authorization: `Bearer ${token}` });
+
+export const getAdminMe = (token) => fetch(`${API_BASE}/api/admin/me`, { headers: authHeader(token) }).then(handle);
 
 export const getMessages = (token) =>
   fetch(`${API_BASE}/api/contact`, { headers: authHeader(token) }).then(handle);
