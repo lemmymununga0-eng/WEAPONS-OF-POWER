@@ -23,7 +23,11 @@ export default function AdminSermonsPage() {
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [busy, setBusy] = useState(false);
 
-  const reload = () => getSermonsAdmin(token).then(setSermons);
+  // Block body — see AdminChurchInfoPage.jsx for why a concise arrow here
+  // (implicitly returning the fetch Promise) breaks useEffect's cleanup.
+  const reload = () => {
+    getSermonsAdmin(token).then(setSermons);
+  };
   useEffect(reload, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const add = async (e) => {

@@ -10,7 +10,11 @@ export default function AdminMessagesPage() {
   const [messages, setMessages] = useState(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
-  const reload = () => getMessages(token).then(setMessages);
+  // Block body — see AdminChurchInfoPage.jsx for why a concise arrow here
+  // (implicitly returning the fetch Promise) breaks useEffect's cleanup.
+  const reload = () => {
+    getMessages(token).then(setMessages);
+  };
   useEffect(reload, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const markRead = async (id) => {

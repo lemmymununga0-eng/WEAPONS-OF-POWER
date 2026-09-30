@@ -148,7 +148,7 @@ export default function LocationsPage() {
         </div>
 
         <div className="locations-filters">
-          <select value={country} onChange={(e) => updateParam("country", e.target.value)}>
+          <select aria-label="Filter by country" value={country} onChange={(e) => updateParam("country", e.target.value)}>
             <option value="">All countries</option>
             {countryOptions.map((c) => (
               <option key={c} value={c}>
@@ -157,7 +157,11 @@ export default function LocationsPage() {
             ))}
           </select>
 
-          <select value={province} onChange={(e) => updateParam("province", e.target.value)}>
+          <select
+            aria-label="Filter by province or region"
+            value={province}
+            onChange={(e) => updateParam("province", e.target.value)}
+          >
             <option value="">All provinces / regions</option>
             {provinces.map((p) => (
               <option key={p} value={p}>
@@ -166,7 +170,7 @@ export default function LocationsPage() {
             ))}
           </select>
 
-          <select value={clusterId} onChange={(e) => updateParam("cluster_id", e.target.value)}>
+          <select aria-label="Filter by cluster" value={clusterId} onChange={(e) => updateParam("cluster_id", e.target.value)}>
             <option value="">All clusters</option>
             {clusters.map((c) => (
               <option key={c.id} value={c.id}>
@@ -177,6 +181,7 @@ export default function LocationsPage() {
 
           <input
             type="search"
+            aria-label="Search by town or pastor name"
             placeholder="Search by town or pastor name"
             value={q}
             onChange={(e) => updateParam("q", e.target.value)}

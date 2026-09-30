@@ -16,7 +16,15 @@ export default function AdminChurchInfoPage() {
   const [info, setInfo] = useState(null);
   const [error, setError] = useState(null);
 
-  const reload = () => getChurchInfo().then(setInfo).catch((err) => setError(err.message));
+  // Block body, not a concise arrow: useEffect(reload) below requires reload
+  // to return undefined or a cleanup function, never a Promise (a concise
+  // `() => x().then(y)` implicitly returns the Promise, which React then
+  // tries to call as a cleanup function on unmount and throws).
+  const reload = () => {
+    getChurchInfo()
+      .then(setInfo)
+      .catch((err) => setError(err.message));
+  };
 
   useEffect(reload, []); // eslint-disable-line react-hooks/exhaustive-deps
 
