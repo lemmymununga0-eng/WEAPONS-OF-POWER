@@ -19,6 +19,8 @@ export const getChurchInfo = () => fetch(`${API_BASE}/api/church-info`).then(han
 export const getMinistries = () => fetch(`${API_BASE}/api/ministries`).then(handle);
 export const getEvents = () => fetch(`${API_BASE}/api/events`).then(handle);
 export const getSermons = () => fetch(`${API_BASE}/api/sermons`).then(handle);
+export const getSermonsAdmin = (token) =>
+  fetch(`${API_BASE}/api/sermons/admin`, { headers: authHeader(token) }).then(handle);
 
 export const submitContact = (payload) =>
   fetch(`${API_BASE}/api/contact`, {
@@ -39,6 +41,12 @@ const authHeader = (token) => ({ Authorization: `Bearer ${token}` });
 
 export const getMessages = (token) =>
   fetch(`${API_BASE}/api/contact`, { headers: authHeader(token) }).then(handle);
+
+export const markMessageRead = (token, id) =>
+  fetch(`${API_BASE}/api/contact/${id}/read`, { method: "PUT", headers: authHeader(token) }).then(handle);
+
+export const deleteMessage = (token, id) =>
+  fetch(`${API_BASE}/api/contact/${id}`, { method: "DELETE", headers: authHeader(token) }).then(handle);
 
 export const changePassword = (token, current_password, new_password) =>
   fetch(`${API_BASE}/api/admin/password`, {
@@ -90,6 +98,13 @@ export const createMinistry = (token, fields) =>
     body: toFormData(fields),
   }).then(handle);
 
+export const updateMinistry = (token, id, fields) =>
+  fetch(`${API_BASE}/api/ministries/${id}`, {
+    method: "PUT",
+    headers: authHeader(token),
+    body: toFormData(fields),
+  }).then(handle);
+
 export const deleteMinistry = (token, id) =>
   fetch(`${API_BASE}/api/ministries/${id}`, { method: "DELETE", headers: authHeader(token) }).then(handle);
 
@@ -110,7 +125,39 @@ export const createSermon = (token, fields) =>
     body: toFormData(fields),
   }).then(handle);
 
+export const updateSermon = (token, id, fields) =>
+  fetch(`${API_BASE}/api/sermons/${id}`, {
+    method: "PUT",
+    headers: authHeader(token),
+    body: toFormData(fields),
+  }).then(handle);
+
 export const deleteSermon = (token, id) =>
   fetch(`${API_BASE}/api/sermons/${id}`, { method: "DELETE", headers: authHeader(token) }).then(handle);
+
+// ---- service times (JSON, admin only) ----
+export const createServiceTime = (token, payload) =>
+  fetch(`${API_BASE}/api/service-times`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...authHeader(token) },
+    body: JSON.stringify(payload),
+  }).then(handle);
+
+export const updateServiceTime = (token, id, payload) =>
+  fetch(`${API_BASE}/api/service-times/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...authHeader(token) },
+    body: JSON.stringify(payload),
+  }).then(handle);
+
+export const deleteServiceTime = (token, id) =>
+  fetch(`${API_BASE}/api/service-times/${id}`, { method: "DELETE", headers: authHeader(token) }).then(handle);
+
+export const reorderServiceTimes = (token, ids) =>
+  fetch(`${API_BASE}/api/service-times/reorder`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...authHeader(token) },
+    body: JSON.stringify({ ids }),
+  }).then(handle);
 
 export const mediaUrl = (path) => (path ? `${API_BASE}${path}` : "");

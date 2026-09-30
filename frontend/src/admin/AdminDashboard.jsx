@@ -13,7 +13,7 @@ import {
   getEvents,
   createEvent,
   deleteEvent,
-  getSermons,
+  getSermonsAdmin,
   createSermon,
   deleteSermon,
   getMessages,
@@ -35,7 +35,7 @@ export default function AdminDashboard() {
     getChurchInfo().then(setInfo);
     getMinistries().then(setMinistries);
     getEvents().then(setEvents);
-    getSermons().then(setSermons);
+    getSermonsAdmin(token).then(setSermons);
     getMessages(token).then(setMessages).catch(() => {});
   };
 
@@ -101,7 +101,7 @@ export default function AdminDashboard() {
           sermons={sermons}
           token={token}
           onChange={() => {
-            getSermons().then(setSermons);
+            getSermonsAdmin(token).then(setSermons);
             flash("Sermons updated.");
           }}
         />

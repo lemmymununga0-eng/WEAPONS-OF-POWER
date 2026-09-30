@@ -10,7 +10,7 @@ church ends up with a large media library.
 """
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, Text, DateTime
+from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean
 from .database import Base
 
 
@@ -78,6 +78,9 @@ class Sermon(Base):
     media_path = Column(String, default="")        # uploaded audio/video
     external_link = Column(String, default="")      # or a YouTube/link instead
     notes = Column(Text, default="")
+    category = Column(String, default="")
+    scripture = Column(String, default="")
+    published = Column(Boolean, default=True)
 
 
 class ContactMessage(Base):
@@ -88,6 +91,7 @@ class ContactMessage(Base):
     contact_info = Column(String, nullable=False)
     message = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+    read = Column(Boolean, default=False)
 
 
 class AdminUser(Base):

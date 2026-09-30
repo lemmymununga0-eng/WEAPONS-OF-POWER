@@ -24,6 +24,10 @@ class ServiceTimeIn(BaseModel):
     sort_order: int = 0
 
 
+class ServiceTimeReorderIn(BaseModel):
+    ids: List[int]
+
+
 class ChurchInfoOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
@@ -93,6 +97,9 @@ class SermonOut(BaseModel):
     media_path: str
     external_link: str
     notes: str
+    category: str
+    scripture: str
+    published: bool
 
 
 # ---------- Contact ----------
@@ -110,6 +117,7 @@ class ContactMessageOut(BaseModel):
     contact_info: str
     message: str
     created_at: datetime
+    read: bool
 
 
 # ---------- Auth ----------

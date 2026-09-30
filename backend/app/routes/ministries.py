@@ -38,6 +38,44 @@ def create_ministry(
     return ministry
 
 
+@router.put("/{ministry_id}", response_model=MinistryOut)
+def update_ministry(
+    ministry_id: int,
+    name: Optional[str] = Form(None),
+    description: Optional[str] = Form(None),
+    leader: Optional[str] = Form(None),
+    meeting_time: Optional[str] = Form(None),
+    image: Optional[UploadFile] = File(None),
+    remove_image: bool = Form(False),
+    db: Session = Depends(get_db),
+    _admin: AdminUser = Depends(get_current_admin),
+):
+    ministry = db.get(Ministry, ministry_id)
+    if not ministry:
+        raise HTTPException(404, "Ministry not found")
+
+    if name is not None:
+        ministry.name = name
+    if description is not None:
+        ministry.description = description
+    if leader is not None:
+        ministry.leader = leader
+    if meeting_time is not None:
+        ministry.meeting_time = meeting_time
+
+    if image:
+        try:
+            ministry.image_path = save_upload(image, IMAGE_TYPES)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+    elif remove_image:
+        ministry.image_path = ""
+
+    db.commit()
+    db.refresh(ministry)
+    return ministry
+
+
 @router.delete("/{ministry_id}")
 def delete_ministry(ministry_id: int, db: Session = Depends(get_db), _admin: AdminUser = Depends(get_current_admin)):
     ministry = db.get(Ministry, ministry_id)

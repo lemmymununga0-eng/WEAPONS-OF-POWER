@@ -14,7 +14,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .database import Base, engine, SessionLocal, sync_schema
 from .seed import seed_if_empty
-from .routes import church_info, ministries, events, sermons, contact, admin
+from .routes import church_info, ministries, events, sermons, contact, admin, service_times
 from . import uploads as uploads_module
 
 app = FastAPI(title="Weapons of Power Ministry International — API")
@@ -41,6 +41,7 @@ app.include_router(events.router)
 app.include_router(sermons.router)
 app.include_router(contact.router)
 app.include_router(admin.router)
+app.include_router(service_times.router)
 
 
 @app.on_event("startup")
