@@ -7,16 +7,21 @@ import Ministries from "../components/Ministries.jsx";
 import Events from "../components/Events.jsx";
 import Give from "../components/Give.jsx";
 import Contact from "../components/Contact.jsx";
-import { getBranches } from "../api/client.js";
+import SermonCard from "../components/sermons/SermonCard.jsx";
+import { getBranches, getSermons } from "../api/client.js";
 
 export default function Home() {
   const { info, ministries, events } = useOutletContext();
   const [branches, setBranches] = useState(null);
+  const [sermons, setSermons] = useState(null);
   const location = useLocation();
   const prefillMessage = location.state?.prefillMessage || "";
 
   useEffect(() => {
     getBranches().then(setBranches).catch(() => setBranches([]));
+    getSermons()
+      .then((list) => setSermons(list.slice(0, 3)))
+      .catch(() => setSermons([]));
   }, []);
 
   const provinceCount = branches
@@ -37,9 +42,22 @@ export default function Home() {
             <span className="eyebrow">Recent messages</span>
             <h2>Latest Sermons</h2>
           </div>
-          <p className="empty-note">
-            The sermons library is coming soon. <Link to="/sermons">Visit the Sermons page</Link>.
-          </p>
+          {sermons && sermons.length > 0 ? (
+            <>
+              <div className="sermon-grid">
+                {sermons.map((s) => (
+                  <SermonCard key={s.id} sermon={s} />
+                ))}
+              </div>
+              <p style={{ marginTop: 16 }}>
+                <Link to="/sermons">See all sermons →</Link>
+              </p>
+            </>
+          ) : (
+            <p className="empty-note">
+              The sermons library is empty for now. <Link to="/sermons">Visit the Sermons page</Link>.
+            </p>
+          )}
         </div>
       </section>
 

@@ -24,6 +24,15 @@ def list_sermons_admin(db: Session = Depends(get_db), _admin: AdminUser = Depend
     return db.query(Sermon).order_by(Sermon.id.desc()).all()
 
 
+@router.get("/{sermon_id}", response_model=SermonOut)
+def get_sermon(sermon_id: int, db: Session = Depends(get_db)):
+    """Public single-sermon lookup — published only."""
+    sermon = db.query(Sermon).filter(Sermon.id == sermon_id, Sermon.published == True).first()  # noqa: E712
+    if not sermon:
+        raise HTTPException(404, "Sermon not found")
+    return sermon
+
+
 @router.post("", response_model=SermonOut)
 def create_sermon(
     title: str = Form(...),

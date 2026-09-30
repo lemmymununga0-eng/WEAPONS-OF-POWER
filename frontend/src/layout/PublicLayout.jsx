@@ -3,6 +3,8 @@ import { Outlet } from "react-router-dom";
 import Nav from "../components/Nav.jsx";
 import Footer from "../components/Footer.jsx";
 import { getChurchInfo, getMinistries, getEvents } from "../api/client.js";
+import { PlayerProvider } from "../player/PlayerContext.jsx";
+import MiniPlayer from "../player/MiniPlayer.jsx";
 
 export default function PublicLayout() {
   const [info, setInfo] = useState(null);
@@ -34,10 +36,11 @@ export default function PublicLayout() {
   }
 
   return (
-    <>
+    <PlayerProvider>
       <Nav churchName={info.name} />
       <Outlet context={{ info, ministries, events }} />
       <Footer info={info} />
-    </>
+      <MiniPlayer />
+    </PlayerProvider>
   );
 }

@@ -21,6 +21,7 @@ export const getEvents = () => fetch(`${API_BASE}/api/events`).then(handle);
 export const getSermons = () => fetch(`${API_BASE}/api/sermons`).then(handle);
 export const getSermonsAdmin = (token) =>
   fetch(`${API_BASE}/api/sermons/admin`, { headers: authHeader(token) }).then(handle);
+export const getSermon = (id) => fetch(`${API_BASE}/api/sermons/${id}`).then(handle);
 
 export const getProvinces = () => fetch(`${API_BASE}/api/branches/provinces`).then(handle);
 
