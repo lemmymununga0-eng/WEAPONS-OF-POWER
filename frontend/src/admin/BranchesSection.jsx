@@ -135,12 +135,12 @@ function BranchesTab({ branches, clusters, provinces, search, setSearch, provinc
       <h2>Branches</h2>
       <div className="admin-form-grid" style={{ marginBottom: 4 }}>
         <div className="field">
-          <label>Search</label>
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Name, town, pastor" />
+          <label htmlFor="br-filter-search">Search</label>
+          <input id="br-filter-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Name, town, pastor" />
         </div>
         <div className="field">
-          <label>Province</label>
-          <select value={provinceFilter} onChange={(e) => setProvinceFilter(e.target.value)}>
+          <label htmlFor="br-filter-province">Province</label>
+          <select id="br-filter-province" value={provinceFilter} onChange={(e) => setProvinceFilter(e.target.value)}>
             <option value="">All provinces</option>
             {provinces.map((p) => (
               <option key={p} value={p}>
@@ -317,12 +317,12 @@ function BranchEditor({ branch, clusters, provinces, token, onCancel, onSaved })
       <div className="branch-editor-grid">
         <form className="admin-form-grid" onSubmit={handleSubmit}>
           <div className="field">
-            <label>Branch name *</label>
-            <input value={form.name} onChange={set("name")} required />
+            <label htmlFor="br-name">Branch name *</label>
+            <input id="br-name" value={form.name} onChange={set("name")} required />
           </div>
           <div className="field">
-            <label>Country</label>
-            <select value={form.country} onChange={handleCountryChange}>
+            <label htmlFor="br-country">Country</label>
+            <select id="br-country" value={form.country} onChange={handleCountryChange}>
               {COUNTRIES.map((c) => (
                 <option key={c} value={c}>
                   {c}
@@ -333,8 +333,8 @@ function BranchEditor({ branch, clusters, provinces, token, onCancel, onSaved })
 
           {form.country === "Zambia" ? (
             <div className="field">
-              <label>Province *</label>
-              <select value={form.province || ""} onChange={set("province")}>
+              <label htmlFor="br-province">Province *</label>
+              <select id="br-province" value={form.province || ""} onChange={set("province")}>
                 <option value="">Select a province</option>
                 {provinces.map((p) => (
                   <option key={p} value={p}>
@@ -345,18 +345,18 @@ function BranchEditor({ branch, clusters, provinces, token, onCancel, onSaved })
             </div>
           ) : (
             <div className="field">
-              <label>Region</label>
-              <input value={form.province || ""} onChange={set("province")} placeholder="e.g. Eastern Cape" />
+              <label htmlFor="br-region">Region</label>
+              <input id="br-region" value={form.province || ""} onChange={set("province")} placeholder="e.g. Eastern Cape" />
             </div>
           )}
 
           <div className="field">
-            <label>Town</label>
-            <input value={form.town || ""} onChange={set("town")} />
+            <label htmlFor="br-town">Town</label>
+            <input id="br-town" value={form.town || ""} onChange={set("town")} />
           </div>
           <div className="field">
-            <label>Cluster</label>
-            <select value={form.cluster_id || ""} onChange={set("cluster_id")}>
+            <label htmlFor="br-cluster">Cluster</label>
+            <select id="br-cluster" value={form.cluster_id || ""} onChange={set("cluster_id")}>
               <option value="">No cluster</option>
               {clusters.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -367,38 +367,54 @@ function BranchEditor({ branch, clusters, provinces, token, onCancel, onSaved })
           </div>
 
           <div className="field" style={{ gridColumn: "1 / -1" }}>
-            <label>Address</label>
-            <input value={form.address || ""} onChange={set("address")} />
+            <label htmlFor="br-address">Address</label>
+            <input id="br-address" value={form.address || ""} onChange={set("address")} />
           </div>
           <div className="field" style={{ gridColumn: "1 / -1" }}>
-            <label>Directions note</label>
-            <input value={form.directions_note || ""} onChange={set("directions_note")} placeholder="e.g. Opposite the market" />
+            <label htmlFor="br-directions">Directions note</label>
+            <input
+              id="br-directions"
+              value={form.directions_note || ""}
+              onChange={set("directions_note")}
+              placeholder="e.g. Opposite the market"
+            />
           </div>
 
           <div className="field" style={{ gridColumn: "1 / -1" }}>
-            <label>Service times (one per line)</label>
-            <textarea value={form.service_times || ""} onChange={set("service_times")} />
+            <label htmlFor="br-service-times">Service times (one per line)</label>
+            <textarea id="br-service-times" value={form.service_times || ""} onChange={set("service_times")} />
           </div>
 
           <div className="field">
-            <label>Pastor / leader name *</label>
-            <input value={form.pastor_name} onChange={set("pastor_name")} required />
+            <label htmlFor="br-pastor-name">Pastor / leader name *</label>
+            <input id="br-pastor-name" value={form.pastor_name} onChange={set("pastor_name")} required />
           </div>
           <div className="field">
-            <label>Title</label>
-            <input value={form.pastor_title || ""} onChange={set("pastor_title")} placeholder="Pastor, Bishop, Overseer…" />
+            <label htmlFor="br-pastor-title">Title</label>
+            <input
+              id="br-pastor-title"
+              value={form.pastor_title || ""}
+              onChange={set("pastor_title")}
+              placeholder="Pastor, Bishop, Overseer…"
+            />
           </div>
           <div className="field">
-            <label>Pastor phone</label>
-            <input type="tel" value={form.pastor_phone || ""} onChange={set("pastor_phone")} placeholder="0971234567" />
+            <label htmlFor="br-pastor-phone">Pastor phone</label>
+            <input id="br-pastor-phone" type="tel" value={form.pastor_phone || ""} onChange={set("pastor_phone")} placeholder="0971234567" />
           </div>
           <div className="field">
-            <label>Pastor WhatsApp</label>
-            <input type="tel" value={form.pastor_whatsapp || ""} onChange={set("pastor_whatsapp")} placeholder="0971234567" />
+            <label htmlFor="br-pastor-whatsapp">Pastor WhatsApp</label>
+            <input
+              id="br-pastor-whatsapp"
+              type="tel"
+              value={form.pastor_whatsapp || ""}
+              onChange={set("pastor_whatsapp")}
+              placeholder="0971234567"
+            />
           </div>
           <div className="field">
-            <label>Pastor email</label>
-            <input type="email" value={form.pastor_email || ""} onChange={set("pastor_email")} />
+            <label htmlFor="br-pastor-email">Pastor email</label>
+            <input id="br-pastor-email" type="email" value={form.pastor_email || ""} onChange={set("pastor_email")} />
           </div>
 
           <div className="field">
@@ -420,11 +436,11 @@ function BranchEditor({ branch, clusters, provinces, token, onCancel, onSaved })
           </div>
 
           <div className="field" style={{ gridColumn: "1 / -1" }}>
-            <label>Branch photo</label>
+            <label htmlFor="br-branch-photo">Branch photo</label>
             {branchPhotoPreview && !removeBranchPhoto && (
               <img className="admin-photo-preview" src={branchPhotoPreview} alt="Branch preview" />
             )}
-            <input type="file" accept="image/*" onChange={(e) => handlePhoto("branch", e.target.files?.[0])} />
+            <input id="br-branch-photo" type="file" accept="image/*" onChange={(e) => handlePhoto("branch", e.target.files?.[0])} />
             {branch?.branch_photo && !branchPhotoFile && (
               <label className="checkbox-inline">
                 <input
@@ -438,11 +454,11 @@ function BranchEditor({ branch, clusters, provinces, token, onCancel, onSaved })
           </div>
 
           <div className="field" style={{ gridColumn: "1 / -1" }}>
-            <label>Pastor photo</label>
+            <label htmlFor="br-pastor-photo">Pastor photo</label>
             {pastorPhotoPreview && !removePastorPhoto && (
               <img className="admin-photo-preview round" src={pastorPhotoPreview} alt="Pastor preview" />
             )}
-            <input type="file" accept="image/*" onChange={(e) => handlePhoto("pastor", e.target.files?.[0])} />
+            <input id="br-pastor-photo" type="file" accept="image/*" onChange={(e) => handlePhoto("pastor", e.target.files?.[0])} />
             {branch?.pastor_photo && !pastorPhotoFile && (
               <label className="checkbox-inline">
                 <input
@@ -469,6 +485,7 @@ function BranchEditor({ branch, clusters, provinces, token, onCancel, onSaved })
                 value={mapsLinkInput}
                 onChange={(e) => setMapsLinkInput(e.target.value)}
                 placeholder="Paste a Google Maps link or lat,lng"
+                aria-label="Google Maps link or coordinates"
               />
               <button type="button" className="btn btn-outline on-light" onClick={applyMapsLink}>
                 Set pin
@@ -596,24 +613,36 @@ function ClustersTab({ clusters, token, reload, onNotice }) {
 
       <form className="admin-form-grid" onSubmit={submit} style={{ marginTop: 16 }}>
         <div className="field">
-          <label>Cluster name</label>
-          <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <label htmlFor="cl-name">Cluster name</label>
+          <input id="cl-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
         </div>
         <div className="field">
-          <label>Province</label>
-          <input value={form.province} onChange={(e) => setForm({ ...form, province: e.target.value })} />
+          <label htmlFor="cl-province">Province</label>
+          <input id="cl-province" value={form.province} onChange={(e) => setForm({ ...form, province: e.target.value })} />
         </div>
         <div className="field">
-          <label>Overseer name</label>
-          <input value={form.overseer_name} onChange={(e) => setForm({ ...form, overseer_name: e.target.value })} />
+          <label htmlFor="cl-overseer-name">Overseer name</label>
+          <input
+            id="cl-overseer-name"
+            value={form.overseer_name}
+            onChange={(e) => setForm({ ...form, overseer_name: e.target.value })}
+          />
         </div>
         <div className="field">
-          <label>Overseer phone</label>
-          <input value={form.overseer_phone} onChange={(e) => setForm({ ...form, overseer_phone: e.target.value })} />
+          <label htmlFor="cl-overseer-phone">Overseer phone</label>
+          <input
+            id="cl-overseer-phone"
+            value={form.overseer_phone}
+            onChange={(e) => setForm({ ...form, overseer_phone: e.target.value })}
+          />
         </div>
         <div className="field" style={{ gridColumn: "1 / -1" }}>
-          <label>Description</label>
-          <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          <label htmlFor="cl-description">Description</label>
+          <textarea
+            id="cl-description"
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
         </div>
         <div style={{ gridColumn: "1 / -1", display: "flex", gap: 10 }}>
           <button className="btn btn-primary" type="submit">

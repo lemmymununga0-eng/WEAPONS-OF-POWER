@@ -85,25 +85,48 @@ export default function AdminSermonsPage() {
           editingId === s.id ? (
             <div className="admin-list-row" key={s.id} style={{ flexDirection: "column", alignItems: "stretch" }}>
               <div className="admin-form-grid">
-                <input value={editForm.title} onChange={(e) => setEditForm({ ...editForm, title: e.target.value })} placeholder="Title" />
-                <input value={editForm.speaker} onChange={(e) => setEditForm({ ...editForm, speaker: e.target.value })} placeholder="Speaker" />
                 <input
+                  aria-label="Title"
+                  value={editForm.title}
+                  onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                  placeholder="Title"
+                />
+                <input
+                  aria-label="Speaker"
+                  value={editForm.speaker}
+                  onChange={(e) => setEditForm({ ...editForm, speaker: e.target.value })}
+                  placeholder="Speaker"
+                />
+                <input
+                  aria-label="Sermon date"
                   type="date"
                   value={editForm.sermon_date}
                   onChange={(e) => setEditForm({ ...editForm, sermon_date: e.target.value })}
                 />
-                <input value={editForm.category} onChange={(e) => setEditForm({ ...editForm, category: e.target.value })} placeholder="Category" />
                 <input
+                  aria-label="Category"
+                  value={editForm.category}
+                  onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
+                  placeholder="Category"
+                />
+                <input
+                  aria-label="Scripture"
                   value={editForm.scripture}
                   onChange={(e) => setEditForm({ ...editForm, scripture: e.target.value })}
                   placeholder="Scripture, e.g. John 3:16"
                 />
                 <input
+                  aria-label="External link"
                   value={editForm.external_link}
                   onChange={(e) => setEditForm({ ...editForm, external_link: e.target.value })}
                   placeholder="External link"
                 />
-                <input type="file" accept="audio/*,video/*" onChange={(e) => setEditForm({ ...editForm, media: e.target.files?.[0] })} />
+                <input
+                  aria-label="Audio or video file"
+                  type="file"
+                  accept="audio/*,video/*"
+                  onChange={(e) => setEditForm({ ...editForm, media: e.target.files?.[0] })}
+                />
                 <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}>
                   <input
                     type="checkbox"
@@ -113,6 +136,7 @@ export default function AdminSermonsPage() {
                   Published
                 </label>
                 <textarea
+                  aria-label="Notes"
                   style={{ gridColumn: "1 / -1" }}
                   value={editForm.notes}
                   onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
@@ -164,32 +188,42 @@ export default function AdminSermonsPage() {
 
       <form className="admin-form-grid" onSubmit={add} style={{ marginTop: 16 }}>
         <div className="field">
-          <label>Title</label>
-          <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+          <label htmlFor="sm-title">Title</label>
+          <input id="sm-title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
         </div>
         <div className="field">
-          <label>Speaker</label>
-          <input value={form.speaker} onChange={(e) => setForm({ ...form, speaker: e.target.value })} />
+          <label htmlFor="sm-speaker">Speaker</label>
+          <input id="sm-speaker" value={form.speaker} onChange={(e) => setForm({ ...form, speaker: e.target.value })} />
         </div>
         <div className="field">
-          <label>Date</label>
-          <input type="date" value={form.sermon_date} onChange={(e) => setForm({ ...form, sermon_date: e.target.value })} />
+          <label htmlFor="sm-date">Date</label>
+          <input
+            id="sm-date"
+            type="date"
+            value={form.sermon_date}
+            onChange={(e) => setForm({ ...form, sermon_date: e.target.value })}
+          />
         </div>
         <div className="field">
-          <label>Category</label>
-          <input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
+          <label htmlFor="sm-category">Category</label>
+          <input id="sm-category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
         </div>
         <div className="field">
-          <label>Scripture</label>
-          <input value={form.scripture} onChange={(e) => setForm({ ...form, scripture: e.target.value })} placeholder="e.g. John 3:16" />
+          <label htmlFor="sm-scripture">Scripture</label>
+          <input
+            id="sm-scripture"
+            value={form.scripture}
+            onChange={(e) => setForm({ ...form, scripture: e.target.value })}
+            placeholder="e.g. John 3:16"
+          />
         </div>
         <div className="field">
-          <label>External link (YouTube, etc.)</label>
-          <input value={form.external_link} onChange={(e) => setForm({ ...form, external_link: e.target.value })} />
+          <label htmlFor="sm-link">External link (YouTube, etc.)</label>
+          <input id="sm-link" value={form.external_link} onChange={(e) => setForm({ ...form, external_link: e.target.value })} />
         </div>
         <div className="field">
-          <label>Or upload audio/video</label>
-          <input type="file" accept="audio/*,video/*" onChange={(e) => setForm({ ...form, media: e.target.files?.[0] })} />
+          <label htmlFor="sm-media">Or upload audio/video</label>
+          <input id="sm-media" type="file" accept="audio/*,video/*" onChange={(e) => setForm({ ...form, media: e.target.files?.[0] })} />
         </div>
         <div className="field">
           <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -198,8 +232,8 @@ export default function AdminSermonsPage() {
           </label>
         </div>
         <div className="field" style={{ gridColumn: "1 / -1" }}>
-          <label>Notes</label>
-          <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+          <label htmlFor="sm-notes">Notes</label>
+          <textarea id="sm-notes" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
         </div>
         <div style={{ gridColumn: "1 / -1" }}>
           <button className="btn btn-primary" type="submit" disabled={busy}>

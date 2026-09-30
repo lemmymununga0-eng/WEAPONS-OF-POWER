@@ -39,16 +39,30 @@ export default function AdminAccountPage() {
         <h2>Change Admin Password</h2>
         <form className="admin-form-grid" onSubmit={submit}>
           <div className="field">
-            <label>Current password</label>
-            <input type="password" required value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
-          </div>
-          <div className="field">
-            <label>New password</label>
-            <input type="password" required minLength={8} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-          </div>
-          <div className="field">
-            <label>Confirm new password</label>
+            <label htmlFor="acct-current-password">Current password</label>
             <input
+              id="acct-current-password"
+              type="password"
+              required
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="acct-new-password">New password</label>
+            <input
+              id="acct-new-password"
+              type="password"
+              required
+              minLength={8}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="acct-confirm-password">Confirm new password</label>
+            <input
+              id="acct-confirm-password"
               type="password"
               required
               minLength={8}

@@ -65,15 +65,22 @@ export default function AdminMinistriesPage() {
           editingId === m.id ? (
             <div className="admin-list-row" key={m.id} style={{ flexDirection: "column", alignItems: "stretch" }}>
               <div className="admin-form-grid">
-                <input value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} placeholder="Name" />
-                <input value={editForm.leader} onChange={(e) => setEditForm({ ...editForm, leader: e.target.value })} placeholder="Leader" />
+                <input aria-label="Name" value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} placeholder="Name" />
+                <input aria-label="Leader" value={editForm.leader} onChange={(e) => setEditForm({ ...editForm, leader: e.target.value })} placeholder="Leader" />
                 <input
+                  aria-label="Meeting time"
                   value={editForm.meeting_time}
                   onChange={(e) => setEditForm({ ...editForm, meeting_time: e.target.value })}
                   placeholder="Meeting time"
                 />
-                <input type="file" accept="image/*" onChange={(e) => setEditForm({ ...editForm, image: e.target.files?.[0] })} />
+                <input
+                  aria-label="Photo"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setEditForm({ ...editForm, image: e.target.files?.[0] })}
+                />
                 <textarea
+                  aria-label="Description"
                   style={{ gridColumn: "1 / -1" }}
                   value={editForm.description}
                   onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
@@ -122,24 +129,32 @@ export default function AdminMinistriesPage() {
 
       <form className="admin-form-grid" onSubmit={add} style={{ marginTop: 16 }}>
         <div className="field">
-          <label>Name</label>
-          <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <label htmlFor="min-name">Name</label>
+          <input id="min-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
         </div>
         <div className="field">
-          <label>Leader</label>
-          <input value={form.leader} onChange={(e) => setForm({ ...form, leader: e.target.value })} />
+          <label htmlFor="min-leader">Leader</label>
+          <input id="min-leader" value={form.leader} onChange={(e) => setForm({ ...form, leader: e.target.value })} />
         </div>
         <div className="field">
-          <label>Meeting time</label>
-          <input value={form.meeting_time} onChange={(e) => setForm({ ...form, meeting_time: e.target.value })} />
+          <label htmlFor="min-meeting-time">Meeting time</label>
+          <input
+            id="min-meeting-time"
+            value={form.meeting_time}
+            onChange={(e) => setForm({ ...form, meeting_time: e.target.value })}
+          />
         </div>
         <div className="field">
-          <label>Photo (optional)</label>
-          <input type="file" accept="image/*" onChange={(e) => setForm({ ...form, image: e.target.files?.[0] })} />
+          <label htmlFor="min-photo">Photo (optional)</label>
+          <input id="min-photo" type="file" accept="image/*" onChange={(e) => setForm({ ...form, image: e.target.files?.[0] })} />
         </div>
         <div className="field" style={{ gridColumn: "1 / -1" }}>
-          <label>Description</label>
-          <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          <label htmlFor="min-description">Description</label>
+          <textarea
+            id="min-description"
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
         </div>
         <div style={{ gridColumn: "1 / -1" }}>
           <button className="btn btn-primary" type="submit" disabled={busy}>

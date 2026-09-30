@@ -42,12 +42,22 @@ export default function LivestreamSection({ token, onNotice }) {
       <h2>Livestream</h2>
       <form className="admin-form-grid" onSubmit={save}>
         <div className="field" style={{ gridColumn: "1 / -1" }}>
-          <label>YouTube link</label>
-          <input value={form.youtube_url} onChange={set("youtube_url")} placeholder="https://youtube.com/watch?v=... or youtu.be/..." />
+          <label htmlFor="ls-youtube">YouTube link</label>
+          <input
+            id="ls-youtube"
+            value={form.youtube_url}
+            onChange={set("youtube_url")}
+            placeholder="https://youtube.com/watch?v=... or youtu.be/..."
+          />
         </div>
         <div className="field" style={{ gridColumn: "1 / -1" }}>
-          <label>Facebook link</label>
-          <input value={form.facebook_url} onChange={set("facebook_url")} placeholder="https://facebook.com/.../videos/..." />
+          <label htmlFor="ls-facebook">Facebook link</label>
+          <input
+            id="ls-facebook"
+            value={form.facebook_url}
+            onChange={set("facebook_url")}
+            placeholder="https://facebook.com/.../videos/..."
+          />
         </div>
         <div className="field">
           <label>
@@ -63,8 +73,13 @@ export default function LivestreamSection({ token, onNotice }) {
         </div>
         {form.manual_live && (
           <div className="field" style={{ gridColumn: "1 / -1" }}>
-            <label>Manual title (shown while the override is on)</label>
-            <input value={form.manual_title} onChange={set("manual_title")} placeholder="e.g. Special Crusade Night" />
+            <label htmlFor="ls-manual-title">Manual title (shown while the override is on)</label>
+            <input
+              id="ls-manual-title"
+              value={form.manual_title}
+              onChange={set("manual_title")}
+              placeholder="e.g. Special Crusade Night"
+            />
           </div>
         )}
         <div style={{ gridColumn: "1 / -1" }}>

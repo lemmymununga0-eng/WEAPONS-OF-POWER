@@ -75,100 +75,121 @@ function ChurchInfoForm({ info, token, onSaved }) {
       <h2>Church Details</h2>
       <form className="admin-form-grid" onSubmit={save}>
         <div className="field">
-          <label>Church name</label>
-          <input value={form.name} onChange={set("name")} />
+          <label htmlFor="ci-name">Church name</label>
+          <input id="ci-name" value={form.name} onChange={set("name")} />
         </div>
         <div className="field">
-          <label>Location</label>
-          <input value={form.location} onChange={set("location")} />
+          <label htmlFor="ci-location">Location</label>
+          <input id="ci-location" value={form.location} onChange={set("location")} />
         </div>
         <div className="field">
-          <label>Founder name</label>
-          <input value={form.founder_name} onChange={set("founder_name")} />
+          <label htmlFor="ci-founder-name">Founder name</label>
+          <input id="ci-founder-name" value={form.founder_name} onChange={set("founder_name")} />
         </div>
         <div className="field">
-          <label>Founder title</label>
-          <input value={form.founder_title} onChange={set("founder_title")} />
+          <label htmlFor="ci-founder-title">Founder title</label>
+          <input id="ci-founder-title" value={form.founder_title} onChange={set("founder_title")} />
         </div>
         <div className="field" style={{ gridColumn: "1 / -1" }}>
-          <label>Founder bio</label>
-          <textarea value={form.founder_bio} onChange={set("founder_bio")} />
+          <label htmlFor="ci-founder-bio">Founder bio</label>
+          <textarea id="ci-founder-bio" value={form.founder_bio} onChange={set("founder_bio")} />
         </div>
         <div className="field">
-          <label>Founder photo</label>
-          <input type="file" accept="image/*" onChange={handlePhoto} />
+          <label htmlFor="ci-founder-photo">Founder photo</label>
+          <input id="ci-founder-photo" type="file" accept="image/*" onChange={handlePhoto} />
         </div>
         <div className="field">
-          <label>Church / building photo</label>
-          <input type="file" accept="image/*" onChange={handleChurchPhoto} />
+          <label htmlFor="ci-church-photo">Church / building photo</label>
+          <input id="ci-church-photo" type="file" accept="image/*" onChange={handleChurchPhoto} />
         </div>
         <div className="field" style={{ gridColumn: "1 / -1" }}>
-          <label>Mission statement</label>
-          <textarea value={form.mission} onChange={set("mission")} />
+          <label htmlFor="ci-mission">Mission statement</label>
+          <textarea id="ci-mission" value={form.mission} onChange={set("mission")} />
         </div>
         <div className="field">
-          <label>Phone</label>
-          <input value={form.phone} onChange={set("phone")} />
+          <label htmlFor="ci-phone">Phone</label>
+          <input id="ci-phone" type="tel" inputMode="tel" value={form.phone} onChange={set("phone")} />
         </div>
         <div className="field">
-          <label>WhatsApp</label>
-          <input value={form.whatsapp} onChange={set("whatsapp")} />
+          <label htmlFor="ci-whatsapp">WhatsApp</label>
+          <input id="ci-whatsapp" type="tel" inputMode="tel" value={form.whatsapp} onChange={set("whatsapp")} />
         </div>
         <div className="field">
-          <label>Email</label>
-          <input value={form.email} onChange={set("email")} />
+          <label htmlFor="ci-email">Email</label>
+          <input id="ci-email" type="email" inputMode="email" value={form.email} onChange={set("email")} />
         </div>
         <div className="field">
-          <label>Facebook / social link</label>
-          <input value={form.facebook} onChange={set("facebook")} />
+          <label htmlFor="ci-facebook">Facebook / social link</label>
+          <input id="ci-facebook" value={form.facebook} onChange={set("facebook")} />
         </div>
 
         <div className="field" style={{ gridColumn: "1 / -1" }}>
           <h3 style={{ fontSize: 16, margin: "8px 0 0" }}>Give / donation details</h3>
         </div>
         <div className="field" style={{ gridColumn: "1 / -1" }}>
-          <label>Free-text note (shown above the payment details)</label>
-          <textarea value={form.give_details} onChange={set("give_details")} />
+          <label htmlFor="ci-give-details">Free-text note (shown above the payment details)</label>
+          <textarea id="ci-give-details" value={form.give_details} onChange={set("give_details")} />
         </div>
         <div className="field">
-          <label>Airtel Money number</label>
-          <input value={form.airtel_number} onChange={set("airtel_number")} placeholder="0971234567" />
+          <label htmlFor="ci-airtel-number">Airtel Money number</label>
+          <input
+            id="ci-airtel-number"
+            type="tel"
+            inputMode="tel"
+            value={form.airtel_number}
+            onChange={set("airtel_number")}
+            placeholder="0971234567"
+          />
         </div>
         <div className="field">
-          <label>Airtel Money name</label>
-          <input value={form.airtel_name} onChange={set("airtel_name")} />
+          <label htmlFor="ci-airtel-name">Airtel Money name</label>
+          <input id="ci-airtel-name" value={form.airtel_name} onChange={set("airtel_name")} />
         </div>
         <div className="field">
-          <label>MTN MoMo number</label>
-          <input value={form.mtn_number} onChange={set("mtn_number")} placeholder="0961234567" />
+          <label htmlFor="ci-mtn-number">MTN MoMo number</label>
+          <input
+            id="ci-mtn-number"
+            type="tel"
+            inputMode="tel"
+            value={form.mtn_number}
+            onChange={set("mtn_number")}
+            placeholder="0961234567"
+          />
         </div>
         <div className="field">
-          <label>MTN MoMo name</label>
-          <input value={form.mtn_name} onChange={set("mtn_name")} />
+          <label htmlFor="ci-mtn-name">MTN MoMo name</label>
+          <input id="ci-mtn-name" value={form.mtn_name} onChange={set("mtn_name")} />
         </div>
         <div className="field">
-          <label>Zamtel Kwacha number</label>
-          <input value={form.zamtel_number} onChange={set("zamtel_number")} placeholder="0951234567" />
+          <label htmlFor="ci-zamtel-number">Zamtel Kwacha number</label>
+          <input
+            id="ci-zamtel-number"
+            type="tel"
+            inputMode="tel"
+            value={form.zamtel_number}
+            onChange={set("zamtel_number")}
+            placeholder="0951234567"
+          />
         </div>
         <div className="field">
-          <label>Zamtel Kwacha name</label>
-          <input value={form.zamtel_name} onChange={set("zamtel_name")} />
+          <label htmlFor="ci-zamtel-name">Zamtel Kwacha name</label>
+          <input id="ci-zamtel-name" value={form.zamtel_name} onChange={set("zamtel_name")} />
         </div>
         <div className="field">
-          <label>Bank name</label>
-          <input value={form.bank_name} onChange={set("bank_name")} />
+          <label htmlFor="ci-bank-name">Bank name</label>
+          <input id="ci-bank-name" value={form.bank_name} onChange={set("bank_name")} />
         </div>
         <div className="field">
-          <label>Bank account name</label>
-          <input value={form.bank_account_name} onChange={set("bank_account_name")} />
+          <label htmlFor="ci-bank-account-name">Bank account name</label>
+          <input id="ci-bank-account-name" value={form.bank_account_name} onChange={set("bank_account_name")} />
         </div>
         <div className="field">
-          <label>Bank account number</label>
-          <input value={form.bank_account_number} onChange={set("bank_account_number")} />
+          <label htmlFor="ci-bank-account-number">Bank account number</label>
+          <input id="ci-bank-account-number" value={form.bank_account_number} onChange={set("bank_account_number")} />
         </div>
         <div className="field">
-          <label>Bank branch</label>
-          <input value={form.bank_branch} onChange={set("bank_branch")} />
+          <label htmlFor="ci-bank-branch">Bank branch</label>
+          <input id="ci-bank-branch" value={form.bank_branch} onChange={set("bank_branch")} />
         </div>
 
         <div style={{ gridColumn: "1 / -1" }}>
@@ -235,16 +256,31 @@ function ServiceTimesCard({ info, token, onChange, notify }) {
           editingId === st.id ? (
             <div className="admin-list-row" key={st.id}>
               <div className="admin-form-grid" style={{ flex: 1 }}>
-                <select value={editForm.day} onChange={(e) => setEditForm({ ...editForm, day: e.target.value })}>
+                <select aria-label="Day" value={editForm.day} onChange={(e) => setEditForm({ ...editForm, day: e.target.value })}>
                   {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((d) => (
                     <option key={d} value={d}>
                       {d}
                     </option>
                   ))}
                 </select>
-                <input value={editForm.label} onChange={(e) => setEditForm({ ...editForm, label: e.target.value })} placeholder="Label" />
-                <input value={editForm.start_time} onChange={(e) => setEditForm({ ...editForm, start_time: e.target.value })} placeholder="09:00" />
-                <input value={editForm.end_time} onChange={(e) => setEditForm({ ...editForm, end_time: e.target.value })} placeholder="11:30" />
+                <input
+                  aria-label="Label"
+                  value={editForm.label}
+                  onChange={(e) => setEditForm({ ...editForm, label: e.target.value })}
+                  placeholder="Label"
+                />
+                <input
+                  aria-label="Start time"
+                  value={editForm.start_time}
+                  onChange={(e) => setEditForm({ ...editForm, start_time: e.target.value })}
+                  placeholder="09:00"
+                />
+                <input
+                  aria-label="End time"
+                  value={editForm.end_time}
+                  onChange={(e) => setEditForm({ ...editForm, end_time: e.target.value })}
+                  placeholder="11:30"
+                />
               </div>
               <div style={{ display: "flex", gap: 8 }}>
                 <button className="link-btn" style={{ color: "var(--accent)" }} onClick={() => saveEdit(st.id)}>
@@ -292,8 +328,8 @@ function ServiceTimesCard({ info, token, onChange, notify }) {
 
       <form className="admin-form-grid" onSubmit={add} style={{ marginTop: 16 }}>
         <div className="field">
-          <label>Day</label>
-          <select value={form.day} onChange={(e) => setForm({ ...form, day: e.target.value })}>
+          <label htmlFor="st-day">Day</label>
+          <select id="st-day" value={form.day} onChange={(e) => setForm({ ...form, day: e.target.value })}>
             {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((d) => (
               <option key={d} value={d}>
                 {d}
@@ -302,16 +338,31 @@ function ServiceTimesCard({ info, token, onChange, notify }) {
           </select>
         </div>
         <div className="field">
-          <label>Label</label>
-          <input value={form.label} onChange={(e) => setForm({ ...form, label: e.target.value })} placeholder="Morning Service" />
+          <label htmlFor="st-label">Label</label>
+          <input
+            id="st-label"
+            value={form.label}
+            onChange={(e) => setForm({ ...form, label: e.target.value })}
+            placeholder="Morning Service"
+          />
         </div>
         <div className="field">
-          <label>Start time</label>
-          <input value={form.start_time} onChange={(e) => setForm({ ...form, start_time: e.target.value })} placeholder="09:00" />
+          <label htmlFor="st-start">Start time</label>
+          <input
+            id="st-start"
+            value={form.start_time}
+            onChange={(e) => setForm({ ...form, start_time: e.target.value })}
+            placeholder="09:00"
+          />
         </div>
         <div className="field">
-          <label>End time</label>
-          <input value={form.end_time} onChange={(e) => setForm({ ...form, end_time: e.target.value })} placeholder="11:30" />
+          <label htmlFor="st-end">End time</label>
+          <input
+            id="st-end"
+            value={form.end_time}
+            onChange={(e) => setForm({ ...form, end_time: e.target.value })}
+            placeholder="11:30"
+          />
         </div>
         <div style={{ gridColumn: "1 / -1" }}>
           <button className="btn btn-primary" type="submit">

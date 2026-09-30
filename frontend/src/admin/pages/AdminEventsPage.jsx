@@ -69,28 +69,42 @@ export default function AdminEventsPage() {
       </div>
       <form className="admin-form-grid" onSubmit={add} style={{ marginTop: 16 }}>
         <div className="field">
-          <label>Title</label>
-          <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+          <label htmlFor="ev-title">Title</label>
+          <input id="ev-title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
         </div>
         <div className="field">
-          <label>Date</label>
-          <input type="date" value={form.event_date} onChange={(e) => setForm({ ...form, event_date: e.target.value })} />
+          <label htmlFor="ev-date">Date</label>
+          <input
+            id="ev-date"
+            type="date"
+            value={form.event_date}
+            onChange={(e) => setForm({ ...form, event_date: e.target.value })}
+          />
         </div>
         <div className="field">
-          <label>Time</label>
-          <input value={form.event_time} onChange={(e) => setForm({ ...form, event_time: e.target.value })} placeholder="e.g. 18:00" />
+          <label htmlFor="ev-time">Time</label>
+          <input
+            id="ev-time"
+            value={form.event_time}
+            onChange={(e) => setForm({ ...form, event_time: e.target.value })}
+            placeholder="e.g. 18:00"
+          />
         </div>
         <div className="field">
-          <label>Location</label>
-          <input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+          <label htmlFor="ev-location">Location</label>
+          <input id="ev-location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
         </div>
         <div className="field">
-          <label>Flyer (optional)</label>
-          <input type="file" accept="image/*" onChange={(e) => setForm({ ...form, flyer: e.target.files?.[0] })} />
+          <label htmlFor="ev-flyer">Flyer (optional)</label>
+          <input id="ev-flyer" type="file" accept="image/*" onChange={(e) => setForm({ ...form, flyer: e.target.files?.[0] })} />
         </div>
         <div className="field" style={{ gridColumn: "1 / -1" }}>
-          <label>Description</label>
-          <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          <label htmlFor="ev-description">Description</label>
+          <textarea
+            id="ev-description"
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
         </div>
         <div style={{ gridColumn: "1 / -1" }}>
           <button className="btn btn-primary" type="submit" disabled={busy}>
