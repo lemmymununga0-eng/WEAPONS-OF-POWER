@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function Hero({ info }) {
   return (
     <header id="top" className="hero">
@@ -9,11 +11,11 @@ export default function Hero({ info }) {
           {info?.founder_name || "our founder"} — join us in worship, prayer, and the Word.
         </p>
         <div className="actions">
-          <a href="#events" className="btn btn-primary">
+          <Link to="/live" className="btn btn-primary btn-live">
+            Watch Live
+          </Link>
+          <a href="#events" className="btn btn-outline">
             Plan Your Visit
-          </a>
-          <a href="#contact" className="btn btn-outline">
-            Get in Touch
           </a>
         </div>
       </div>

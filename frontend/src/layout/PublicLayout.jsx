@@ -1,15 +1,10 @@
 import { useEffect, useState } from "react";
-import Nav from "./components/Nav.jsx";
-import Hero from "./components/Hero.jsx";
-import AboutChurch from "./components/AboutChurch.jsx";
-import AboutFounder from "./components/AboutFounder.jsx";
-import Ministries from "./components/Ministries.jsx";
-import Events from "./components/Events.jsx";
-import Give from "./components/Give.jsx";
-import ContactFooter from "./components/ContactFooter.jsx";
-import { getChurchInfo, getMinistries, getEvents } from "./api/client.js";
+import { Outlet } from "react-router-dom";
+import Nav from "../components/Nav.jsx";
+import Footer from "../components/Footer.jsx";
+import { getChurchInfo, getMinistries, getEvents } from "../api/client.js";
 
-export default function PublicSite() {
+export default function PublicLayout() {
   const [info, setInfo] = useState(null);
   const [ministries, setMinistries] = useState([]);
   const [events, setEvents] = useState([]);
@@ -41,13 +36,8 @@ export default function PublicSite() {
   return (
     <>
       <Nav churchName={info.name} />
-      <Hero info={info} />
-      <AboutChurch info={info} />
-      <AboutFounder info={info} />
-      <Ministries ministries={ministries} />
-      <Events info={info} events={events} />
-      <Give info={info} />
-      <ContactFooter info={info} />
+      <Outlet context={{ info, ministries, events }} />
+      <Footer info={info} />
     </>
   );
 }

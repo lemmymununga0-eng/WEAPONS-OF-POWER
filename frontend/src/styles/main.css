@@ -79,6 +79,12 @@ img { max-width: 100%; display: block; }
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 16px;
+  min-width: 0;
+  flex-shrink: 1;
+}
+.brand span {
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 .nav-links {
@@ -95,14 +101,17 @@ img { max-width: 100%; display: block; }
   font-weight: 600;
 }
 .nav-links a:hover { color: var(--accent); }
-.nav-cta {
-  background: var(--accent);
-  color: var(--accent-ink);
+.nav-links a.active { color: var(--accent); }
+.nav-live-btn {
+  background: var(--accent-2);
+  color: #fff;
   padding: 8px 18px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
+  margin-left: auto;
+  white-space: nowrap;
 }
 .nav-toggle {
   display: none;
@@ -426,4 +435,26 @@ footer.site-footer .brand { color: var(--navy-ink); }
   color: var(--ink-muted);
   font-size: 14px;
   font-style: italic;
+}
+
+/* ---------- Stub / not-found pages ---------- */
+.stub-section { min-height: 40vh; }
+.not-found-section {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+}
+.not-found-section h1 { font-size: clamp(28px, 5vw, 44px); }
+.not-found-section .btn { align-self: flex-start; margin-top: 6px; }
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
