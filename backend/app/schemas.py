@@ -160,6 +160,38 @@ class BranchOut(BaseModel):
     sort_order: int
 
 
+# ---------- Livestream ----------
+
+class LivestreamSettingsOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    youtube_url: str
+    facebook_url: str
+    auto_live: bool
+    manual_live: bool
+    manual_title: str
+
+
+class LivestreamSettingsIn(BaseModel):
+    youtube_url: Optional[str] = None
+    facebook_url: Optional[str] = None
+    auto_live: Optional[bool] = None
+    manual_live: Optional[bool] = None
+    manual_title: Optional[str] = None
+
+
+class NextServiceOut(BaseModel):
+    label: str
+    starts_at: str
+
+
+class LiveStatusOut(BaseModel):
+    is_live: bool
+    title: str
+    embed_url: str
+    next_service: Optional[NextServiceOut] = None
+
+
 # ---------- Auth ----------
 
 class Token(BaseModel):

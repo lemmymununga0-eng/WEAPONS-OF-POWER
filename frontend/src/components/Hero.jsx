@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
+import { useLiveStatus } from "../hooks/useLiveStatus.js";
+import { formatNextService } from "../lib/liveFormat.js";
 
 export default function Hero({ info }) {
+  const liveStatus = useLiveStatus();
+
   return (
     <header id="top" className="hero">
       <div className="container">
@@ -11,8 +15,12 @@ export default function Hero({ info }) {
           {info?.founder_name || "our founder"} — join us in worship, prayer, and the Word.
         </p>
         <div className="actions">
-          <Link to="/live" className="btn btn-primary btn-live">
-            Watch Live
+          <Link to="/live" className={`btn btn-primary btn-live ${liveStatus?.is_live ? "is-live" : ""}`}>
+            {liveStatus?.is_live
+              ? `Live now: ${liveStatus.title}`
+              : liveStatus?.next_service
+                ? `Next service: ${formatNextService(liveStatus.next_service)}`
+                : "Watch Live"}
           </Link>
           <a href="#events" className="btn btn-outline">
             Plan Your Visit

@@ -141,6 +141,18 @@ class Branch(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
+class LivestreamSettings(Base):
+    """Singleton row — one record holding the livestream configuration."""
+    __tablename__ = "livestream_settings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    youtube_url = Column(String, default="")
+    facebook_url = Column(String, default="")
+    auto_live = Column(Boolean, default=True)  # treat scheduled ServiceTime windows as live
+    manual_live = Column(Boolean, default=False)  # admin override, takes priority
+    manual_title = Column(String, default="")
+
+
 class AdminUser(Base):
     __tablename__ = "admin_users"
 

@@ -216,3 +216,16 @@ export const mediaUrl = (path) => {
   if (/^(https?:|blob:|data:)/.test(path)) return path;
   return `${API_BASE}${path}`;
 };
+
+// ---- livestream ----
+export const getLiveStatus = () => fetch(`${API_BASE}/api/live-status`).then(handle);
+
+export const getLivestreamSettings = (token) =>
+  fetch(`${API_BASE}/api/livestream`, { headers: authHeader(token) }).then(handle);
+
+export const updateLivestreamSettings = (token, payload) =>
+  fetch(`${API_BASE}/api/livestream`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...authHeader(token) },
+    body: JSON.stringify(payload),
+  }).then(handle);

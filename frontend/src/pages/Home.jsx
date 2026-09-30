@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useLocation, useOutletContext } from "react-router-dom";
 import Hero from "../components/Hero.jsx";
 import AboutChurch from "../components/AboutChurch.jsx";
 import AboutFounder from "../components/AboutFounder.jsx";
@@ -12,6 +12,8 @@ import { getBranches } from "../api/client.js";
 export default function Home() {
   const { info, ministries, events } = useOutletContext();
   const [branches, setBranches] = useState(null);
+  const location = useLocation();
+  const prefillMessage = location.state?.prefillMessage || "";
 
   useEffect(() => {
     getBranches().then(setBranches).catch(() => setBranches([]));
@@ -62,7 +64,7 @@ export default function Home() {
       </section>
 
       <Give info={info} />
-      <Contact info={info} />
+      <Contact info={info} prefillMessage={prefillMessage} />
     </>
   );
 }

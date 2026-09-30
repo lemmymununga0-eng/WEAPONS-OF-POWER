@@ -14,7 +14,7 @@ import os
 
 from sqlalchemy.orm import Session
 
-from .models import ChurchInfo, ServiceTime, Ministry, Event, AdminUser, Branch, Cluster
+from .models import ChurchInfo, ServiceTime, Ministry, Event, AdminUser, Branch, Cluster, LivestreamSettings
 from .auth import hash_password
 from .slugify import slugify
 
@@ -111,6 +111,10 @@ def seed_if_empty(db: Session) -> None:
             )
             db.add(hq)
             db.commit()
+
+    if db.query(LivestreamSettings).first() is None:
+        db.add(LivestreamSettings())
+        db.commit()
 
     # Development-only example branches/clusters, clearly labelled, only
     # created when explicitly opted into.

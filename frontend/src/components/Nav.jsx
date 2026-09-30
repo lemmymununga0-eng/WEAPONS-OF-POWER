@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import Logo from "./Logo.jsx";
+import { useLiveStatus } from "../hooks/useLiveStatus.js";
+import { formatNextService } from "../lib/liveFormat.js";
 
 const LINKS = [
   { to: "/#about", label: "About" },
@@ -19,6 +21,7 @@ export default function Nav({ churchName }) {
   const location = useLocation();
   const drawerRef = useRef(null);
   const toggleRef = useRef(null);
+  const liveStatus = useLiveStatus();
 
   // Close on route (path or hash) change.
   useEffect(() => {
@@ -63,8 +66,12 @@ export default function Nav({ churchName }) {
           <Logo size={32} />
           <span>{churchName}</span>
         </Link>
-        <Link to="/live" className="nav-live-btn">
-          Watch Live
+        <Link to="/live" className={`nav-live-btn ${liveStatus?.is_live ? "is-live" : ""}`}>
+          {liveStatus?.is_live
+            ? `Live now: ${liveStatus.title}`
+            : liveStatus?.next_service
+              ? `Next service: ${formatNextService(liveStatus.next_service)}`
+              : "Watch Live"}
         </Link>
         <button
           ref={toggleRef}
