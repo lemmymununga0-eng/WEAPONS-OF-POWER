@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import Hero from "../components/Hero.jsx";
 import AboutChurch from "../components/AboutChurch.jsx";
@@ -6,9 +7,19 @@ import Ministries from "../components/Ministries.jsx";
 import Events from "../components/Events.jsx";
 import Give from "../components/Give.jsx";
 import Contact from "../components/Contact.jsx";
+import { getBranches } from "../api/client.js";
 
 export default function Home() {
   const { info, ministries, events } = useOutletContext();
+  const [branches, setBranches] = useState(null);
+
+  useEffect(() => {
+    getBranches().then(setBranches).catch(() => setBranches([]));
+  }, []);
+
+  const provinceCount = branches
+    ? new Set(branches.filter((b) => b.province).map((b) => b.province)).size
+    : 0;
 
   return (
     <>
@@ -36,9 +47,17 @@ export default function Home() {
             <span className="eyebrow">Find us near you</span>
             <h2>Our Branches</h2>
           </div>
-          <p className="empty-note">
-            Branch locations are coming soon. <Link to="/locations">Find a Location</Link>.
-          </p>
+          {branches && branches.length > 0 ? (
+            <p>
+              {branches.length} {branches.length === 1 ? "branch" : "branches"}
+              {provinceCount > 0 ? ` across ${provinceCount} ${provinceCount === 1 ? "province" : "provinces"}` : ""}.{" "}
+              <Link to="/locations">Find a location near you</Link>.
+            </p>
+          ) : (
+            <p className="empty-note">
+              Branch locations coming soon. <Link to="/locations">Find a Location</Link>.
+            </p>
+          )}
         </div>
       </section>
 

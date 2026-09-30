@@ -1,0 +1,38 @@
+// Common English short names, Zambia first per spec. Used by the admin
+// branch editor's country picker — the public Locations filter derives
+// its country options from actual branch data instead, since there's no
+// point offering 190 filter options with nothing behind them.
+export const COUNTRIES = [
+  "Zambia",
+  "Angola",
+  "Australia",
+  "Botswana",
+  "Burundi",
+  "Cameroon",
+  "Canada",
+  "Democratic Republic of the Congo",
+  "Egypt",
+  "Eswatini",
+  "Ethiopia",
+  "France",
+  "Germany",
+  "Ghana",
+  "India",
+  "Ireland",
+  "Kenya",
+  "Lesotho",
+  "Malawi",
+  "Mozambique",
+  "Namibia",
+  "Nigeria",
+  "Rwanda",
+  "Somalia",
+  "South Africa",
+  "South Sudan",
+  "Tanzania",
+  "Uganda",
+  "United Arab Emirates",
+  "United Kingdom",
+  "United States",
+  "Zimbabwe",
+];

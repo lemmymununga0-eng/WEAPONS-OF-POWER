@@ -22,6 +22,21 @@ export const getSermons = () => fetch(`${API_BASE}/api/sermons`).then(handle);
 export const getSermonsAdmin = (token) =>
   fetch(`${API_BASE}/api/sermons/admin`, { headers: authHeader(token) }).then(handle);
 
+export const getProvinces = () => fetch(`${API_BASE}/api/branches/provinces`).then(handle);
+
+export const getBranches = (params = {}, token = null) => {
+  const qs = new URLSearchParams(
+    Object.fromEntries(Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== ""))
+  ).toString();
+  return fetch(`${API_BASE}/api/branches${qs ? `?${qs}` : ""}`, {
+    headers: token ? authHeader(token) : {},
+  }).then(handle);
+};
+
+export const getBranch = (slug) => fetch(`${API_BASE}/api/branches/${slug}`).then(handle);
+
+export const getClusters = () => fetch(`${API_BASE}/api/clusters`).then(handle);
+
 export const submitContact = (payload) =>
   fetch(`${API_BASE}/api/contact`, {
     method: "POST",
@@ -153,6 +168,41 @@ export const updateServiceTime = (token, id, payload) =>
 export const deleteServiceTime = (token, id) =>
   fetch(`${API_BASE}/api/service-times/${id}`, { method: "DELETE", headers: authHeader(token) }).then(handle);
 
+// ---- branches & clusters (multipart, admin writes) ----
+export const createBranch = (token, fields) =>
+  fetch(`${API_BASE}/api/branches`, {
+    method: "POST",
+    headers: authHeader(token),
+    body: toFormData(fields),
+  }).then(handle);
+
+export const updateBranch = (token, id, fields) =>
+  fetch(`${API_BASE}/api/branches/${id}`, {
+    method: "PUT",
+    headers: authHeader(token),
+    body: toFormData(fields),
+  }).then(handle);
+
+export const deleteBranch = (token, id) =>
+  fetch(`${API_BASE}/api/branches/${id}`, { method: "DELETE", headers: authHeader(token) }).then(handle);
+
+export const createCluster = (token, fields) =>
+  fetch(`${API_BASE}/api/clusters`, {
+    method: "POST",
+    headers: authHeader(token),
+    body: toFormData(fields),
+  }).then(handle);
+
+export const updateCluster = (token, id, fields) =>
+  fetch(`${API_BASE}/api/clusters/${id}`, {
+    method: "PUT",
+    headers: authHeader(token),
+    body: toFormData(fields),
+  }).then(handle);
+
+export const deleteCluster = (token, id) =>
+  fetch(`${API_BASE}/api/clusters/${id}`, { method: "DELETE", headers: authHeader(token) }).then(handle);
+
 export const reorderServiceTimes = (token, ids) =>
   fetch(`${API_BASE}/api/service-times/reorder`, {
     method: "POST",
@@ -160,4 +210,9 @@ export const reorderServiceTimes = (token, ids) =>
     body: JSON.stringify({ ids }),
   }).then(handle);
 
-export const mediaUrl = (path) => (path ? `${API_BASE}${path}` : "");
+export const mediaUrl = (path) => {
+  if (!path) return "";
+  // Already a usable URL (a local blob: preview, or already-absolute) — pass through.
+  if (/^(https?:|blob:|data:)/.test(path)) return path;
+  return `${API_BASE}${path}`;
+};

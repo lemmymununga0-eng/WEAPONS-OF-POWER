@@ -19,6 +19,7 @@ import {
   getMessages,
   changePassword,
 } from "../api/client.js";
+import BranchesSection from "./BranchesSection.jsx";
 
 export default function AdminDashboard() {
   const { token, logout } = useAuth();
@@ -105,6 +106,8 @@ export default function AdminDashboard() {
             flash("Sermons updated.");
           }}
         />
+
+        <BranchesSection token={token} onNotice={flash} />
 
         <MessagesCard messages={messages} />
 
