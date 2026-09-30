@@ -10,7 +10,7 @@ church ends up with a large media library.
 """
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean
+from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, Float, ForeignKey
 from .database import Base
 
 
@@ -92,6 +92,53 @@ class ContactMessage(Base):
     message = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     read = Column(Boolean, default=False)
+
+
+class Cluster(Base):
+    """A group of branches under one overseer, e.g. 'Copperbelt Cluster'."""
+    __tablename__ = "clusters"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    province = Column(String, default="")
+    overseer_name = Column(String, default="")
+    overseer_photo = Column(String, default="")
+    overseer_phone = Column(String, default="")
+    description = Column(Text, default="")
+
+
+class Branch(Base):
+    __tablename__ = "branches"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    slug = Column(String, nullable=False, unique=True, index=True)
+    country = Column(String, nullable=False, default="Zambia")
+    # Province (when country is Zambia, one of the 10) or free-text region
+    # (any other country). Nullable at the DB level because the seeded
+    # headquarters branch starts without one — "required" is enforced by
+    # the API on create/update, not by a DB constraint.
+    province = Column(String, nullable=True)
+    town = Column(String, default="")
+    cluster_id = Column(Integer, ForeignKey("clusters.id"), nullable=True)
+    address = Column(String, default="")
+    directions_note = Column(String, default="")
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+    is_headquarters = Column(Boolean, default=False)
+    service_times = Column(Text, default="")  # free text; HQ uses the ServiceTime table instead
+    branch_photo = Column(String, default="")
+    pastor_name = Column(String, nullable=False)
+    pastor_title = Column(String, default="Pastor")
+    pastor_photo = Column(String, default="")
+    pastor_phone = Column(String, default="")
+    pastor_whatsapp = Column(String, default="")
+    pastor_email = Column(String, default="")
+    show_pastor_contacts = Column(Boolean, default=True)
+    active = Column(Boolean, default=True)
+    sort_order = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
 class AdminUser(Base):

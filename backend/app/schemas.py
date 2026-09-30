@@ -120,6 +120,46 @@ class ContactMessageOut(BaseModel):
     read: bool
 
 
+# ---------- Clusters & Branches ----------
+
+class ClusterOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    name: str
+    province: str
+    overseer_name: str
+    overseer_photo: str
+    overseer_phone: str
+    description: str
+
+
+class BranchOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    name: str
+    slug: str
+    country: str
+    province: Optional[str] = None
+    town: str
+    cluster_id: Optional[int] = None
+    address: str
+    directions_note: str
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    is_headquarters: bool
+    service_times: str
+    branch_photo: str
+    pastor_name: str
+    pastor_title: str
+    pastor_photo: str
+    pastor_phone: str
+    pastor_whatsapp: str
+    pastor_email: str
+    show_pastor_contacts: bool
+    active: bool
+    sort_order: int
+
+
 # ---------- Auth ----------
 
 class Token(BaseModel):

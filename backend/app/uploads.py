@@ -12,7 +12,9 @@ import uuid
 from fastapi import UploadFile
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
+# Overridable so tests can redirect uploads to a scratch folder instead of
+# mixing test files into the real backend/uploads/.
+UPLOADS_DIR = os.environ.get("UPLOADS_DIR") or os.path.join(BASE_DIR, "uploads")
 os.makedirs(UPLOADS_DIR, exist_ok=True)
 
 MAX_UPLOAD_BYTES = 20 * 1024 * 1024  # 20MB

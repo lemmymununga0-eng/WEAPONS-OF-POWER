@@ -28,6 +28,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 12  # 12 hours
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/admin/login")
+optional_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/admin/login", auto_error=False)
 
 # ---- login rate limiting ----
 # In-memory per-IP counter. Good enough for a single-instance deployment
@@ -90,3 +91,21 @@ def get_current_admin(token: str = Depends(oauth2_scheme), db: Session = Depends
     if admin is None:
         raise credentials_exception
     return admin
+
+
+def get_optional_admin(
+    token: Optional[str] = Depends(optional_oauth2_scheme), db: Session = Depends(get_db)
+) -> Optional[AdminUser]:
+    """Like get_current_admin, but returns None instead of raising when
+    there's no (or an invalid) token — for endpoints whose behaviour
+    changes for an admin caller without requiring one."""
+    if not token:
+        return None
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            return None
+    except JWTError:
+        return None
+    return db.query(AdminUser).filter(AdminUser.username == username).first()

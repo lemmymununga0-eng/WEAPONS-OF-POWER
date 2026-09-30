@@ -10,10 +10,13 @@ as given. The mission statement, ministries, and the one example event
 are clearly-marked drafts/examples — edit or delete them from the admin
 dashboard (Section 05 of the blueprint, Phase 3) once the site is live.
 """
+import os
+
 from sqlalchemy.orm import Session
 
-from .models import ChurchInfo, ServiceTime, Ministry, Event, AdminUser
+from .models import ChurchInfo, ServiceTime, Ministry, Event, AdminUser, Branch, Cluster
 from .auth import hash_password
+from .slugify import slugify
 
 DEFAULT_ADMIN_USERNAME = "admin"
 DEFAULT_ADMIN_PASSWORD = "ChangeMe123!"  # change this immediately after first login
@@ -83,4 +86,72 @@ def seed_if_empty(db: Session) -> None:
             hashed_password=hash_password(DEFAULT_ADMIN_PASSWORD),
         )
         db.add(admin)
+        db.commit()
+
+    # Seed the headquarters branch from ChurchInfo/founder details, once,
+    # whenever the branches table is empty — independent of the ChurchInfo
+    # check above, since on an already-deployed database church_info will
+    # already exist by the time this new table first appears.
+    if db.query(Branch).first() is None:
+        info = db.query(ChurchInfo).first()
+        if info is not None:
+            hq = Branch(
+                name=info.name,
+                slug=slugify(info.name),
+                country="Zambia",
+                province=None,  # not confirmed yet — flagged in the admin until filled in
+                address=info.location,
+                is_headquarters=True,
+                branch_photo=info.church_photo,
+                pastor_name=info.founder_name,
+                pastor_title=info.founder_title,
+                pastor_photo=info.founder_photo,
+                pastor_email=info.email,
+                active=True,
+            )
+            db.add(hq)
+            db.commit()
+
+    # Development-only example branches/clusters, clearly labelled, only
+    # created when explicitly opted into.
+    if os.environ.get("SEED_EXAMPLES") == "true" and db.query(Cluster).first() is None:
+        copperbelt = Cluster(
+            name="Copperbelt Cluster (Example)",
+            province="Copperbelt",
+            overseer_name="Example Overseer",
+            description="Example cluster — edit or remove via the admin dashboard.",
+        )
+        db.add(copperbelt)
+        db.commit()
+        db.refresh(copperbelt)
+
+        example_branches = [
+            Branch(
+                name="Weapons of Power, Kitwe (Example)",
+                slug=slugify("Weapons of Power, Kitwe (Example)"),
+                country="Zambia",
+                province="Copperbelt",
+                town="Kitwe",
+                cluster_id=copperbelt.id,
+                pastor_name="Example Pastor",
+                pastor_title="Pastor",
+                latitude=-12.8024,
+                longitude=28.2132,
+                active=True,
+            ),
+            Branch(
+                name="Weapons of Power, Ndola (Example)",
+                slug=slugify("Weapons of Power, Ndola (Example)"),
+                country="Zambia",
+                province="Copperbelt",
+                town="Ndola",
+                cluster_id=copperbelt.id,
+                pastor_name="Example Pastor",
+                pastor_title="Pastor",
+                latitude=-12.9587,
+                longitude=28.6366,
+                active=True,
+            ),
+        ]
+        db.add_all(example_branches)
         db.commit()

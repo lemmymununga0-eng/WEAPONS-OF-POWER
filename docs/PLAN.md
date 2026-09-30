@@ -44,9 +44,12 @@ Phases are built and checked in on one at a time, not unattended end-to-end.
   description.
 - `LivestreamSettings` (single row): youtube_url, facebook_url, auto_live,
   manual_live, manual_title.
-- `ChurchInfo` additions: Airtel/MTN/Zamtel mobile-money fields, bank fields.
-- `ContactMessage` addition: `read` boolean.
-- `Sermon` additions: category, scripture, published boolean.
+- `ContactMessage` addition: `read` boolean. (done, Phase 2)
+- `Sermon` additions: category, scripture, published boolean. (done, Phase 2)
+- `ChurchInfo` additions (Airtel/MTN/Zamtel mobile-money fields, bank fields):
+  moved to Phase 7, bundled with the Give UI and admin Church-info form
+  rework rather than Phase 3 — keeps Phase 3 scoped to Branches/Clusters
+  as the spec's own phase list titles it.
 
 All new columns on *existing* tables get scalar defaults (sync_schema can add
 columns but not constraints). New constraints (unique slug, etc.) only on the
