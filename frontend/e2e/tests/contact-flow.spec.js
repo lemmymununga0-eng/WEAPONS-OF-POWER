@@ -7,7 +7,7 @@ test("submitting the contact form, then marking it read and deleting it in admin
 
   const uniqueName = `E2E Tester ${Date.now()}`;
 
-  await page.goto("/#contact");
+  await page.goto("/contact");
   await page.getByLabel("Name").fill(uniqueName);
   await page.getByLabel("Phone or email").fill("e2e@example.com");
   await page.getByLabel("Message").fill("This is an end-to-end test message.");

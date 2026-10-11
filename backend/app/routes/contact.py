@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import ContactMessage, AdminUser
 from ..schemas import ContactMessageIn, ContactMessageOut
-from ..auth import get_current_admin
+from ..auth import require_admin
 
 router = APIRouter(prefix="/api/contact", tags=["contact"])
 
@@ -21,13 +21,13 @@ def submit_message(payload: ContactMessageIn, db: Session = Depends(get_db)):
 
 
 @router.get("", response_model=List[ContactMessageOut])
-def list_messages(db: Session = Depends(get_db), _admin: AdminUser = Depends(get_current_admin)):
+def list_messages(db: Session = Depends(get_db), _admin: AdminUser = Depends(require_admin)):
     """Admin-only inbox of contact form submissions."""
     return db.query(ContactMessage).order_by(ContactMessage.created_at.desc()).all()
 
 
 @router.put("/{message_id}/read", response_model=ContactMessageOut)
-def mark_message_read(message_id: int, db: Session = Depends(get_db), _admin: AdminUser = Depends(get_current_admin)):
+def mark_message_read(message_id: int, db: Session = Depends(get_db), _admin: AdminUser = Depends(require_admin)):
     msg = db.get(ContactMessage, message_id)
     if not msg:
         raise HTTPException(404, "Message not found")
@@ -38,7 +38,7 @@ def mark_message_read(message_id: int, db: Session = Depends(get_db), _admin: Ad
 
 
 @router.delete("/{message_id}")
-def delete_message(message_id: int, db: Session = Depends(get_db), _admin: AdminUser = Depends(get_current_admin)):
+def delete_message(message_id: int, db: Session = Depends(get_db), _admin: AdminUser = Depends(require_admin)):
     msg = db.get(ContactMessage, message_id)
     if not msg:
         raise HTTPException(404, "Message not found")

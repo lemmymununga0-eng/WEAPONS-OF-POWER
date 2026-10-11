@@ -23,7 +23,7 @@ export default function LivePage() {
   }, []);
 
   const sendPrayerRequest = () => {
-    navigate("/#contact", { state: { prefillMessage: "Prayer request: " } });
+    navigate("/contact", { state: { prefillMessage: "Prayer request: " } });
   };
 
   if (!liveStatus) {

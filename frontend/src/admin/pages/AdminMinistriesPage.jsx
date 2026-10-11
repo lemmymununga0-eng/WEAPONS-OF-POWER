@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { getMinistries, createMinistry, updateMinistry, deleteMinistry, mediaUrl } from "../../api/client.js";
+import { getMinistriesAdmin, createMinistry, updateMinistry, deleteMinistry, mediaUrl } from "../../api/client.js";
 
-const EMPTY = { name: "", description: "", leader: "", meeting_time: "", image: null };
+const EMPTY = { name: "", description: "", leader: "", meeting_time: "", contact_info: "", is_active: true, image: null };
 
 export default function AdminMinistriesPage() {
   const { token, notify } = useOutletContext();
@@ -16,7 +16,7 @@ export default function AdminMinistriesPage() {
   // Block body — see AdminChurchInfoPage.jsx for why a concise arrow here
   // (implicitly returning the fetch Promise) breaks useEffect's cleanup.
   const reload = () => {
-    getMinistries().then(setMinistries);
+    getMinistriesAdmin(token).then(setMinistries);
   };
   useEffect(reload, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -36,7 +36,7 @@ export default function AdminMinistriesPage() {
 
   const startEdit = (m) => {
     setEditingId(m.id);
-    setEditForm({ name: m.name, description: m.description, leader: m.leader, meeting_time: m.meeting_time, image: null });
+    setEditForm({ name: m.name, description: m.description, leader: m.leader, meeting_time: m.meeting_time, contact_info: m.contact_info || "", is_active: m.is_active !== false, image: null });
   };
 
   const saveEdit = async (id) => {
@@ -83,6 +83,20 @@ export default function AdminMinistriesPage() {
                   accept="image/*"
                   onChange={(e) => setEditForm({ ...editForm, image: e.target.files?.[0] })}
                 />
+                <input
+                  aria-label="Contact info"
+                  value={editForm.contact_info}
+                  onChange={(e) => setEditForm({ ...editForm, contact_info: e.target.value })}
+                  placeholder="Contact info"
+                />
+                <label className="checkbox-inline">
+                  <input
+                    type="checkbox"
+                    checked={editForm.is_active}
+                    onChange={(e) => setEditForm({ ...editForm, is_active: e.target.checked })}
+                  />{" "}
+                  Active (visible on the website)
+                </label>
                 <textarea
                   aria-label="Description"
                   style={{ gridColumn: "1 / -1" }}
@@ -104,7 +118,9 @@ export default function AdminMinistriesPage() {
             <div className="admin-list-row" key={m.id}>
               {m.image_path && <img src={mediaUrl(m.image_path)} alt="" className="admin-photo-preview" style={{ width: 60, height: 44, marginBottom: 0 }} />}
               <div className="info">
-                <b>{m.name}</b>
+                <b>
+                  {m.name} {m.is_active === false && <span className="hidden-badge">Inactive</span>}
+                </b>
                 <span>{m.description}</span>
               </div>
               <div style={{ display: "flex", gap: 8 }}>
@@ -131,7 +147,7 @@ export default function AdminMinistriesPage() {
         )}
       </div>
 
-      <form className="admin-form-grid" onSubmit={add} style={{ marginTop: 16 }}>
+      <form id="add-form" className="admin-form-grid" onSubmit={add} style={{ marginTop: 16 }}>
         <div className="field">
           <label htmlFor="min-name">Name</label>
           <input id="min-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
@@ -151,6 +167,10 @@ export default function AdminMinistriesPage() {
         <div className="field">
           <label htmlFor="min-photo">Photo (optional)</label>
           <input id="min-photo" type="file" accept="image/*" onChange={(e) => setForm({ ...form, image: e.target.files?.[0] })} />
+        </div>
+        <div className="field">
+          <label htmlFor="min-contact">Contact info</label>
+          <input id="min-contact" value={form.contact_info} onChange={(e) => setForm({ ...form, contact_info: e.target.value })} />
         </div>
         <div className="field" style={{ gridColumn: "1 / -1" }}>
           <label htmlFor="min-description">Description</label>

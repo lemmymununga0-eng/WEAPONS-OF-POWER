@@ -73,7 +73,8 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def get_current_admin(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> AdminUser:
+def get_current_admin_any(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> AdminUser:
+    """Valid, active admin, even one who still has to change their password."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate admin credentials",
@@ -88,8 +89,33 @@ def get_current_admin(token: str = Depends(oauth2_scheme), db: Session = Depends
         raise credentials_exception
 
     admin = db.query(AdminUser).filter(AdminUser.username == username).first()
-    if admin is None:
+    if admin is None or admin.is_active is False:
         raise credentials_exception
+    return admin
+
+
+def get_current_admin(admin: AdminUser = Depends(get_current_admin_any)) -> AdminUser:
+    if admin.must_change_password:
+        raise HTTPException(status_code=403, detail="You need to set a new password before continuing.")
+    return admin
+
+
+ROLE_SUPER = "super_admin"
+ROLE_ADMIN = "admin"
+ROLE_CONTENT = "content_manager"
+ALL_ROLES = (ROLE_SUPER, ROLE_ADMIN, ROLE_CONTENT)
+
+
+def require_admin(admin: AdminUser = Depends(get_current_admin)) -> AdminUser:
+    """Admin or super admin. Content managers are turned away."""
+    if admin.role not in (ROLE_SUPER, ROLE_ADMIN):
+        raise HTTPException(status_code=403, detail="You don't have permission to do that.")
+    return admin
+
+
+def require_super(admin: AdminUser = Depends(get_current_admin)) -> AdminUser:
+    if admin.role != ROLE_SUPER:
+        raise HTTPException(status_code=403, detail="Only a super admin can do that.")
     return admin
 
 
@@ -108,4 +134,7 @@ def get_optional_admin(
             return None
     except JWTError:
         return None
-    return db.query(AdminUser).filter(AdminUser.username == username).first()
+    admin = db.query(AdminUser).filter(AdminUser.username == username).first()
+    if admin is None or admin.is_active is False or admin.role not in (ROLE_SUPER, ROLE_ADMIN):
+        return None
+    return admin

@@ -1,4 +1,5 @@
 import { Suspense, lazy, useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
   getBranches,
   createBranch,
@@ -101,7 +102,9 @@ export default function BranchesSection({ token, onNotice }) {
 // ---------------- Branches tab ----------------
 
 function BranchesTab({ branches, clusters, provinces, search, setSearch, provinceFilter, setProvinceFilter, token, reload, onNotice }) {
-  const [editingId, setEditingId] = useState(null); // null = list view, 0 = new, id = editing
+  const location = useLocation();
+  // null = list view, 0 = new, id = editing. The Overview's "Add a branch" opens a blank form.
+  const [editingId, setEditingId] = useState(location.state?.openNew ? 0 : null);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   const editing = branches.find((b) => b.id === editingId) || (editingId === 0 ? null : undefined);

@@ -5,13 +5,14 @@ import { useLiveStatus } from "../hooks/useLiveStatus.js";
 import { formatNextService } from "../lib/liveFormat.js";
 
 const LINKS = [
-  { to: "/#about", label: "About" },
-  { to: "/#ministries", label: "Ministries" },
+  { to: "/", label: "Home", end: true },
+  { to: "/about", label: "About" },
+  { to: "/services", label: "Services" },
   { to: "/sermons", label: "Sermons" },
-  { to: "/locations", label: "Locations" },
   { to: "/events", label: "Events" },
-  { to: "/#give", label: "Give" },
-  { to: "/#contact", label: "Contact" },
+  { to: "/locations", label: "Locations" },
+  { to: "/giving", label: "Give" },
+  { to: "/contact", label: "Contact" },
 ];
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -81,7 +82,8 @@ export default function Nav({ churchName }) {
           aria-expanded={open}
           aria-controls="nav-drawer"
         >
-          Menu
+          <span className="nav-toggle-icon" aria-hidden="true">☰</span>
+          <span className="nav-toggle-text">Menu</span>
         </button>
         <div
           id="nav-drawer"
@@ -92,6 +94,7 @@ export default function Nav({ churchName }) {
             <NavLink
               key={link.to}
               to={link.to}
+              end={link.end}
               className={({ isActive }) => (isActive ? "active" : undefined)}
             >
               {link.label}

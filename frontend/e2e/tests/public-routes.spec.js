@@ -4,7 +4,7 @@ import AxeBuilder from "@axe-core/playwright";
 
 const BACKEND_URL = "http://127.0.0.1:8001";
 
-const PUBLIC_ROUTES = ["/", "/events", "/sermons", "/live", "/locations", "/this-page-does-not-exist"];
+const PUBLIC_ROUTES = ["/", "/about", "/services", "/ministries", "/giving", "/prayer", "/media", "/contact", "/events", "/sermons", "/live", "/locations", "/this-page-does-not-exist"];
 
 test.describe("Public routes", () => {
   for (const route of PUBLIC_ROUTES) {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { submitContact } from "../api/client.js";
+import MapEmbed from "./common/MapEmbed.jsx";
 
 export default function Contact({ info, prefillMessage = "" }) {
   const [form, setForm] = useState({ name: "", contact_info: "", message: prefillMessage });
@@ -85,9 +86,13 @@ export default function Contact({ info, prefillMessage = "" }) {
                 Phone/WhatsApp/email/social links will appear here once added via the admin dashboard.
               </p>
             )}
-            <div className="map-placeholder">
-              Map pin goes here once the headquarters' coordinates are confirmed.
-            </div>
+            {info?.office_hours && (
+              <div className="row">
+                <b>Office hours</b>
+                <span>{info.office_hours}</span>
+              </div>
+            )}
+            <MapEmbed address={info?.location} title="Church location" />
           </div>
 
           <form className="contact-form" onSubmit={handleSubmit} noValidate>

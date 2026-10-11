@@ -42,6 +42,12 @@ class ChurchInfo(Base):
     whatsapp = Column(String, default="")
     email = Column(String, default="")
     facebook = Column(String, default="")
+    history = Column(Text, default="")
+    vision = Column(Text, default="")
+    beliefs = Column(Text, default="")        # one belief/value per line
+    office_hours = Column(String, default="")
+    instagram = Column(String, default="")
+    youtube = Column(String, default="")
 
 
 class ServiceTime(Base):
@@ -64,6 +70,8 @@ class Ministry(Base):
     leader = Column(String, default="")
     meeting_time = Column(String, default="")
     image_path = Column(String, default="")
+    contact_info = Column(String, default="")
+    is_active = Column(Boolean, default=True)
 
 
 class Event(Base):
@@ -76,6 +84,11 @@ class Event(Base):
     event_time = Column(String, default="")
     location = Column(String, default="")
     flyer_path = Column(String, default="")
+    end_date = Column(String, default="")          # blank = same day as event_date
+    speaker = Column(String, default="")
+    registration_enabled = Column(Boolean, default=False)
+    registration_url = Column(String, default="")
+    published = Column(Boolean, default=True)
 
 
 class Sermon(Base):
@@ -169,3 +182,63 @@ class AdminUser(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, nullable=False)
     hashed_password = Column(String, nullable=False)
+    name = Column(String, default="")
+    email = Column(String, default="")
+    # super_admin | admin | content_manager. Accounts that existed before
+    # roles were added are backfilled as super_admin by sync_schema.
+    role = Column(String, default="super_admin")
+    is_active = Column(Boolean, default=True)
+    # True for the seeded default password and for temporary passwords set by
+    # a super admin; blocks everything except changing the password.
+    must_change_password = Column(Boolean, default=False)
+
+
+class Leader(Base):
+    __tablename__ = "leaders"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    position = Column(String, default="")
+    photo_path = Column(String, default="")
+    biography = Column(Text, default="")
+    sort_order = Column(Integer, default=0)
+    is_founder = Column(Boolean, default=False)
+
+
+class Announcement(Base):
+    __tablename__ = "announcements"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    body = Column(Text, default="")
+    priority = Column(String, default="normal")  # normal | high
+    start_date = Column(String, default="")       # blank = no start limit
+    end_date = Column(String, default="")         # blank = no end limit
+    published = Column(Boolean, default=True)
+
+
+class PrayerRequest(Base):
+    __tablename__ = "prayer_requests"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, default="")
+    email = Column(String, default="")
+    phone = Column(String, default="")
+    request = Column(Text, nullable=False)
+    category = Column(String, default="Other")
+    confidential = Column(Boolean, default=False)
+    status = Column(String, default="New")  # New | In Progress | Prayed For | Closed
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class MediaItem(Base):
+    __tablename__ = "media_items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    kind = Column(String, nullable=False)       # video | photo
+    category = Column(String, default="")
+    url = Column(String, default="")            # external link (YouTube etc.)
+    file_path = Column(String, default="")      # or an uploaded file
+    created_at = Column(DateTime, default=datetime.utcnow)
+    published = Column(Boolean, default=True)

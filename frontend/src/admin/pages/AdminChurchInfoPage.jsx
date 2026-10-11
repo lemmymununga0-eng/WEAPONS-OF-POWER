@@ -114,6 +114,30 @@ function ChurchInfoForm({ info, token, onSaved }) {
           <label htmlFor="ci-mission">Mission statement</label>
           <textarea id="ci-mission" value={form.mission} onChange={set("mission")} />
         </div>
+        <div className="field" style={{ gridColumn: "1 / -1" }}>
+          <label htmlFor="ci-vision">Vision statement</label>
+          <textarea id="ci-vision" value={form.vision || ""} onChange={set("vision")} />
+        </div>
+        <div className="field" style={{ gridColumn: "1 / -1" }}>
+          <label htmlFor="ci-history">History (blank line between paragraphs)</label>
+          <textarea id="ci-history" value={form.history || ""} onChange={set("history")} />
+        </div>
+        <div className="field" style={{ gridColumn: "1 / -1" }}>
+          <label htmlFor="ci-beliefs">Beliefs and values (one per line)</label>
+          <textarea id="ci-beliefs" value={form.beliefs || ""} onChange={set("beliefs")} />
+        </div>
+        <div className="field">
+          <label htmlFor="ci-office-hours">Office hours</label>
+          <input id="ci-office-hours" value={form.office_hours || ""} onChange={set("office_hours")} />
+        </div>
+        <div className="field">
+          <label htmlFor="ci-youtube">YouTube link</label>
+          <input id="ci-youtube" value={form.youtube || ""} onChange={set("youtube")} />
+        </div>
+        <div className="field">
+          <label htmlFor="ci-instagram">Instagram link</label>
+          <input id="ci-instagram" value={form.instagram || ""} onChange={set("instagram")} />
+        </div>
         <div className="field">
           <label htmlFor="ci-phone">Phone</label>
           <input id="ci-phone" type="tel" inputMode="tel" value={form.phone} onChange={set("phone")} />

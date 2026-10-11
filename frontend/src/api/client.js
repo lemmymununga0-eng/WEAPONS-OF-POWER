@@ -27,6 +27,17 @@ async function handle(res) {
 export const getChurchInfo = () => fetch(`${API_BASE}/api/church-info`).then(handle);
 export const getMinistries = () => fetch(`${API_BASE}/api/ministries`).then(handle);
 export const getEvents = () => fetch(`${API_BASE}/api/events`).then(handle);
+export const getEvent = (id) => fetch(`${API_BASE}/api/events/${id}`).then(handle);
+export const getMinistry = (id) => fetch(`${API_BASE}/api/ministries/${id}`).then(handle);
+export const getLeaders = () => fetch(`${API_BASE}/api/leaders`).then(handle);
+export const getActiveAnnouncements = () => fetch(`${API_BASE}/api/announcements/active`).then(handle);
+export const getMedia = (kind = "") => fetch(`${API_BASE}/api/media${kind ? `?kind=${kind}` : ""}`).then(handle);
+export const submitPrayerRequest = (payload) =>
+  fetch(`${API_BASE}/api/prayer-requests`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  }).then(handle);
 export const getSermons = () => fetch(`${API_BASE}/api/sermons`).then(handle);
 export const getSermonsAdmin = (token) =>
   fetch(`${API_BASE}/api/sermons/admin`, { headers: authHeader(token) }).then(handle);
@@ -241,3 +252,52 @@ export const updateLivestreamSettings = (token, payload) =>
     headers: { "Content-Type": "application/json", ...authHeader(token) },
     body: JSON.stringify(payload),
   }).then(handle);
+
+// ---- admin: events/ministries (include unpublished/inactive), leaders, announcements, media, prayer ----
+export const getEventsAdmin = (token) => fetch(`${API_BASE}/api/events/admin`, { headers: authHeader(token) }).then(handle);
+export const updateEvent = (token, id, fields) =>
+  fetch(`${API_BASE}/api/events/${id}`, { method: "PUT", headers: authHeader(token), body: toFormData(fields) }).then(handle);
+export const getMinistriesAdmin = (token) =>
+  fetch(`${API_BASE}/api/ministries/admin`, { headers: authHeader(token) }).then(handle);
+
+const jsonHeaders = (token) => ({ "Content-Type": "application/json", ...authHeader(token) });
+
+export const getLeadersAdmin = (token) => fetch(`${API_BASE}/api/admin/leaders`, { headers: authHeader(token) }).then(handle);
+export const createLeader = (token, fields) =>
+  fetch(`${API_BASE}/api/admin/leaders`, { method: "POST", headers: authHeader(token), body: toFormData(fields) }).then(handle);
+export const updateLeader = (token, id, fields) =>
+  fetch(`${API_BASE}/api/admin/leaders/${id}`, { method: "PUT", headers: authHeader(token), body: toFormData(fields) }).then(handle);
+export const deleteLeader = (token, id) =>
+  fetch(`${API_BASE}/api/admin/leaders/${id}`, { method: "DELETE", headers: authHeader(token) }).then(handle);
+
+export const getAnnouncementsAdmin = (token) =>
+  fetch(`${API_BASE}/api/admin/announcements`, { headers: authHeader(token) }).then(handle);
+export const createAnnouncement = (token, payload) =>
+  fetch(`${API_BASE}/api/admin/announcements`, { method: "POST", headers: jsonHeaders(token), body: JSON.stringify(payload) }).then(handle);
+export const updateAnnouncement = (token, id, payload) =>
+  fetch(`${API_BASE}/api/admin/announcements/${id}`, { method: "PUT", headers: jsonHeaders(token), body: JSON.stringify(payload) }).then(handle);
+export const deleteAnnouncement = (token, id) =>
+  fetch(`${API_BASE}/api/admin/announcements/${id}`, { method: "DELETE", headers: authHeader(token) }).then(handle);
+
+export const getMediaAdmin = (token) => fetch(`${API_BASE}/api/admin/media`, { headers: authHeader(token) }).then(handle);
+export const createMedia = (token, fields) =>
+  fetch(`${API_BASE}/api/admin/media`, { method: "POST", headers: authHeader(token), body: toFormData(fields) }).then(handle);
+export const updateMedia = (token, id, fields) =>
+  fetch(`${API_BASE}/api/admin/media/${id}`, { method: "PUT", headers: authHeader(token), body: toFormData(fields) }).then(handle);
+export const deleteMedia = (token, id) =>
+  fetch(`${API_BASE}/api/admin/media/${id}`, { method: "DELETE", headers: authHeader(token) }).then(handle);
+
+export const getPrayerRequests = (token, params = {}) => {
+  const qs = new URLSearchParams(Object.fromEntries(Object.entries(params).filter(([, v]) => v))).toString();
+  return fetch(`${API_BASE}/api/admin/prayer-requests${qs ? `?${qs}` : ""}`, { headers: authHeader(token) }).then(handle);
+};
+export const setPrayerStatus = (token, id, status) =>
+  fetch(`${API_BASE}/api/admin/prayer-requests/${id}`, { method: "PUT", headers: jsonHeaders(token), body: JSON.stringify({ status }) }).then(handle);
+export const deletePrayerRequest = (token, id) =>
+  fetch(`${API_BASE}/api/admin/prayer-requests/${id}`, { method: "DELETE", headers: authHeader(token) }).then(handle);
+
+export const getUsers = (token) => fetch(`${API_BASE}/api/admin/users`, { headers: authHeader(token) }).then(handle);
+export const createUser = (token, payload) =>
+  fetch(`${API_BASE}/api/admin/users`, { method: "POST", headers: jsonHeaders(token), body: JSON.stringify(payload) }).then(handle);
+export const updateUser = (token, id, payload) =>
+  fetch(`${API_BASE}/api/admin/users/${id}`, { method: "PUT", headers: jsonHeaders(token), body: JSON.stringify(payload) }).then(handle);

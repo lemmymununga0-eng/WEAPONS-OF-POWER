@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import LivestreamSettings, ServiceTime, AdminUser
 from ..schemas import LivestreamSettingsOut, LivestreamSettingsIn, LiveStatusOut
-from ..auth import get_current_admin
+from ..auth import require_admin
 from ..livestream_logic import now_in_lusaka, is_within_service, next_occurrence, embed_url_for
 
 router = APIRouter(tags=["livestream"])
@@ -45,7 +45,7 @@ def live_status(db: Session = Depends(get_db)):
 
 
 @router.get("/api/livestream", response_model=LivestreamSettingsOut)
-def get_livestream_settings(db: Session = Depends(get_db), _admin: AdminUser = Depends(get_current_admin)):
+def get_livestream_settings(db: Session = Depends(get_db), _admin: AdminUser = Depends(require_admin)):
     return db.query(LivestreamSettings).first()
 
 
@@ -53,7 +53,7 @@ def get_livestream_settings(db: Session = Depends(get_db), _admin: AdminUser = D
 def update_livestream_settings(
     payload: LivestreamSettingsIn,
     db: Session = Depends(get_db),
-    _admin: AdminUser = Depends(get_current_admin),
+    _admin: AdminUser = Depends(require_admin),
 ):
     settings = db.query(LivestreamSettings).first()
     for field, value in payload.model_dump(exclude_unset=True).items():

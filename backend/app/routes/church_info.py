@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import ChurchInfo, ServiceTime, AdminUser
 from ..schemas import ChurchInfoOut, ChurchInfoIn
-from ..auth import get_current_admin
+from ..auth import require_admin
 from ..uploads import save_upload, IMAGE_TYPES
 
 router = APIRouter(prefix="/api/church-info", tags=["church-info"])
@@ -23,7 +23,7 @@ def get_church_info(db: Session = Depends(get_db)):
 def upload_founder_photo(
     photo: UploadFile = File(...),
     db: Session = Depends(get_db),
-    _admin: AdminUser = Depends(get_current_admin),
+    _admin: AdminUser = Depends(require_admin),
 ):
     info = db.query(ChurchInfo).first()
     try:
@@ -42,7 +42,7 @@ def upload_founder_photo(
 def upload_church_photo(
     photo: UploadFile = File(...),
     db: Session = Depends(get_db),
-    _admin: AdminUser = Depends(get_current_admin),
+    _admin: AdminUser = Depends(require_admin),
 ):
     info = db.query(ChurchInfo).first()
     try:
@@ -61,7 +61,7 @@ def upload_church_photo(
 def update_church_info(
     payload: ChurchInfoIn,
     db: Session = Depends(get_db),
-    _admin: AdminUser = Depends(get_current_admin),
+    _admin: AdminUser = Depends(require_admin),
 ):
     info = db.query(ChurchInfo).first()
     for field, value in payload.model_dump(exclude_unset=True).items():

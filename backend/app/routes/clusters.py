@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import Cluster, Branch, AdminUser
 from ..schemas import ClusterOut
-from ..auth import get_current_admin
+from ..auth import require_admin
 from ..uploads import save_upload, IMAGE_TYPES
 
 router = APIRouter(prefix="/api/clusters", tags=["clusters"])
@@ -26,7 +26,7 @@ def create_cluster(
     description: str = Form(""),
     overseer_photo: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db),
-    _admin: AdminUser = Depends(get_current_admin),
+    _admin: AdminUser = Depends(require_admin),
 ):
     try:
         photo_path = save_upload(overseer_photo, IMAGE_TYPES) if overseer_photo else ""
@@ -58,7 +58,7 @@ def update_cluster(
     overseer_photo: Optional[UploadFile] = File(None),
     remove_overseer_photo: bool = Form(False),
     db: Session = Depends(get_db),
-    _admin: AdminUser = Depends(get_current_admin),
+    _admin: AdminUser = Depends(require_admin),
 ):
     cluster = db.get(Cluster, cluster_id)
     if not cluster:
@@ -89,7 +89,7 @@ def update_cluster(
 
 
 @router.delete("/{cluster_id}")
-def delete_cluster(cluster_id: int, db: Session = Depends(get_db), _admin: AdminUser = Depends(get_current_admin)):
+def delete_cluster(cluster_id: int, db: Session = Depends(get_db), _admin: AdminUser = Depends(require_admin)):
     """Removing a cluster detaches its branches instead of deleting them."""
     cluster = db.get(Cluster, cluster_id)
     if not cluster:

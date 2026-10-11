@@ -1,25 +1,41 @@
 import { useEffect, useState } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext.jsx";
 import Logo from "../components/Logo.jsx";
 import { getAdminMe, setUnauthorizedHandler } from "../api/client.js";
 import Toast from "./Toast.jsx";
 
+// roles: "all" = every signed-in role, "admin" = admin and super admin,
+// "super" = super admin only. The server enforces the same rules.
 const NAV_ITEMS = [
-  { to: "/admin", label: "Overview", end: true },
-  { to: "/admin/church-info", label: "Church Info" },
-  { to: "/admin/ministries", label: "Ministries" },
-  { to: "/admin/events", label: "Events" },
-  { to: "/admin/sermons", label: "Sermons" },
-  { to: "/admin/branches", label: "Branches" },
-  { to: "/admin/livestream", label: "Livestream" },
-  { to: "/admin/messages", label: "Messages" },
-  { to: "/admin/account", label: "Account" },
+  { to: "/admin", label: "Overview", end: true, access: "all" },
+  { to: "/admin/church-info", label: "Church Info", access: "admin" },
+  { to: "/admin/ministries", label: "Ministries", access: "all" },
+  { to: "/admin/events", label: "Events", access: "all" },
+  { to: "/admin/sermons", label: "Sermons", access: "all" },
+  { to: "/admin/leadership", label: "Leadership", access: "admin" },
+  { to: "/admin/announcements", label: "Announcements", access: "all" },
+  { to: "/admin/media", label: "Media", access: "all" },
+  { to: "/admin/branches", label: "Branches", access: "admin" },
+  { to: "/admin/livestream", label: "Livestream", access: "admin" },
+  { to: "/admin/prayer-requests", label: "Prayer Requests", access: "admin" },
+  { to: "/admin/messages", label: "Messages", access: "admin" },
+  { to: "/admin/users", label: "Users", access: "super" },
+  { to: "/admin/account", label: "Account", access: "all" },
 ];
+
+export const ROLE_LABELS = { super_admin: "Super Admin", admin: "Admin", content_manager: "Content Manager" };
+
+export function canAccess(role, access) {
+  if (access === "all") return true;
+  if (access === "admin") return role === "admin" || role === "super_admin";
+  return role === "super_admin";
+}
 
 export default function AdminLayout() {
   const { token, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [me, setMe] = useState(null);
   const [toastMsg, setToastMsg] = useState("");
@@ -28,6 +44,17 @@ export default function AdminLayout() {
     setToastMsg(text);
     setTimeout(() => setToastMsg(""), 2500);
   };
+
+  // Safety net: if any admin action fails (server error, item already deleted,
+  // no permission), show the reason instead of failing silently.
+  useEffect(() => {
+    const onRejection = (event) => {
+      event.preventDefault();
+      notify(event.reason?.message || "Something went wrong. Please try again.");
+    };
+    window.addEventListener("unhandledrejection", onRejection);
+    return () => window.removeEventListener("unhandledrejection", onRejection);
+  }, []);
 
   const reloadMe = () => getAdminMe(token).then(setMe).catch(() => {});
 
@@ -60,10 +87,10 @@ export default function AdminLayout() {
       <aside id="admin-sidebar" className={`admin-sidebar ${drawerOpen ? "open" : ""}`}>
         <div className="admin-sidebar-brand">
           <Logo size={28} />
-          <b>Admin</b>
+          <b>{me?.name ? `Welcome, ${me.name}` : "Admin"}</b>
         </div>
         <nav className="admin-sidebar-nav">
-          {NAV_ITEMS.map((item) => (
+          {NAV_ITEMS.filter((item) => (me?.must_change_password ? item.to === "/admin/account" : !me || canAccess(me.role, item.access))).map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -76,9 +103,9 @@ export default function AdminLayout() {
           ))}
         </nav>
         <div className="admin-sidebar-footer">
-          <a href="/" target="_blank" rel="noreferrer">
-            View live site
-          </a>
+          <Link to="/" className="admin-back-link">
+            ← Back to website
+          </Link>
           <button type="button" onClick={handleLogout}>
             Log out
           </button>
@@ -88,13 +115,24 @@ export default function AdminLayout() {
       {drawerOpen && <div className="admin-drawer-backdrop" onClick={() => setDrawerOpen(false)} />}
 
       <main className="admin-main">
-        {me?.using_default_password && (
+        {me?.must_change_password && (
+          <div className="admin-warning-banner" role="alert">
+            Choose a new password to continue. Until you do, nothing else in the admin area is available.
+          </div>
+        )}
+        {me?.using_default_password && !me?.must_change_password && (
           <div className="admin-warning-banner" role="alert">
             You're still using the default admin password. <NavLink to="/admin/account">Change it now</NavLink> before
             this site is shared publicly.
           </div>
         )}
-        <Outlet context={{ token, notify, meLoaded: !!me, reloadMe }} />
+        {!me ? (
+          <p className="empty-note">Loading…</p>
+        ) : me.must_change_password && location.pathname !== "/admin/account" ? (
+          <Navigate to="/admin/account" replace />
+        ) : (
+          <Outlet context={{ token, notify, me, meLoaded: true, reloadMe }} />
+        )}
       </main>
 
       <Toast message={toastMsg} />

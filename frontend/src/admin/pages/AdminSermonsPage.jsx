@@ -190,7 +190,7 @@ export default function AdminSermonsPage() {
         )}
       </div>
 
-      <form className="admin-form-grid" onSubmit={add} style={{ marginTop: 16 }}>
+      <form id="add-form" className="admin-form-grid" onSubmit={add} style={{ marginTop: 16 }}>
         <div className="field">
           <label htmlFor="sm-title">Title</label>
           <input id="sm-title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />

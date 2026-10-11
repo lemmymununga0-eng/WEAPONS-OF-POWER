@@ -54,6 +54,12 @@ class ChurchInfoOut(BaseModel):
     whatsapp: str
     email: str
     facebook: str
+    history: str = ""
+    vision: str = ""
+    beliefs: str = ""
+    office_hours: str = ""
+    instagram: str = ""
+    youtube: str = ""
     service_times: List[ServiceTimeOut] = []
 
 
@@ -79,6 +85,12 @@ class ChurchInfoIn(BaseModel):
     whatsapp: Optional[str] = None
     email: Optional[str] = None
     facebook: Optional[str] = None
+    history: Optional[str] = None
+    vision: Optional[str] = None
+    beliefs: Optional[str] = None
+    office_hours: Optional[str] = None
+    instagram: Optional[str] = None
+    youtube: Optional[str] = None
 
 
 # ---------- Ministries ----------
@@ -91,6 +103,8 @@ class MinistryOut(BaseModel):
     leader: str
     meeting_time: str
     image_path: str
+    contact_info: str = ""
+    is_active: bool = True
 
 
 # ---------- Events ----------
@@ -104,6 +118,11 @@ class EventOut(BaseModel):
     event_time: str
     location: str
     flyer_path: str
+    end_date: str = ""
+    speaker: str = ""
+    registration_enabled: bool = False
+    registration_url: str = ""
+    published: bool = True
 
 
 # ---------- Sermons ----------
@@ -227,3 +246,51 @@ class LoginIn(BaseModel):
 class PasswordChangeIn(BaseModel):
     current_password: str
     new_password: str
+
+
+# ---------- Leaders, announcements, prayer, media ----------
+
+class LeaderOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    name: str
+    position: str
+    photo_path: str
+    biography: str
+    sort_order: int
+    is_founder: bool
+
+
+class AnnouncementOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    title: str
+    body: str
+    priority: str
+    start_date: str
+    end_date: str
+
+
+class PrayerRequestIn(BaseModel):
+    name: str = ""
+    email: str = ""
+    phone: str = ""
+    request: str
+    category: str = "Other"
+    confidential: bool = False
+
+
+class PrayerRequestOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    created_at: datetime
+
+
+class MediaItemOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    title: str
+    kind: str
+    category: str
+    url: str
+    file_path: str

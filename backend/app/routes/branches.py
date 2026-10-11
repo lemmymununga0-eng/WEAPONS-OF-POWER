@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import Branch, Cluster, AdminUser
 from ..schemas import BranchOut
-from ..auth import get_current_admin, get_optional_admin
+from ..auth import require_admin, get_optional_admin
 from ..uploads import save_upload, IMAGE_TYPES
 from ..zambia import PROVINCES, normalize_phone
 from ..slugify import slugify
@@ -130,7 +130,7 @@ def create_branch(
     branch_photo: Optional[UploadFile] = File(None),
     pastor_photo: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db),
-    _admin: AdminUser = Depends(get_current_admin),
+    _admin: AdminUser = Depends(require_admin),
 ):
     validate_province(country, province)
     validate_coordinates(latitude, longitude)
@@ -205,7 +205,7 @@ def update_branch(
     remove_branch_photo: bool = Form(False),
     remove_pastor_photo: bool = Form(False),
     db: Session = Depends(get_db),
-    _admin: AdminUser = Depends(get_current_admin),
+    _admin: AdminUser = Depends(require_admin),
 ):
     branch = db.get(Branch, branch_id)
     if not branch:
@@ -278,7 +278,7 @@ def update_branch(
 
 
 @router.delete("/{branch_id}")
-def delete_branch(branch_id: int, db: Session = Depends(get_db), _admin: AdminUser = Depends(get_current_admin)):
+def delete_branch(branch_id: int, db: Session = Depends(get_db), _admin: AdminUser = Depends(require_admin)):
     branch = db.get(Branch, branch_id)
     if not branch:
         raise HTTPException(404, "Branch not found")

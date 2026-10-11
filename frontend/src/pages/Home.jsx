@@ -1,88 +1,168 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import Hero from "../components/Hero.jsx";
-import AboutChurch from "../components/AboutChurch.jsx";
-import AboutFounder from "../components/AboutFounder.jsx";
-import Ministries from "../components/Ministries.jsx";
-import Events from "../components/Events.jsx";
-import Give from "../components/Give.jsx";
-import Contact from "../components/Contact.jsx";
+import ServiceStrip from "../components/common/ServiceStrip.jsx";
+import EventCard from "../components/common/EventCard.jsx";
+import MinistryMarquee from "../components/common/MinistryMarquee.jsx";
 import SermonCard from "../components/sermons/SermonCard.jsx";
-import { getBranches, getSermons } from "../api/client.js";
+import MapEmbed, { directionsUrl } from "../components/common/MapEmbed.jsx";
+import { SkeletonCards } from "../components/common/Skeleton.jsx";
+import { getSermons, getActiveAnnouncements, mediaUrl } from "../api/client.js";
+import { useLiveStatus } from "../hooks/useLiveStatus.js";
+import { isUpcoming } from "../lib/eventDates.js";
+
+function AnnouncementBanner() {
+  const [items, setItems] = useState([]);
+  const [dismissed, setDismissed] = useState(false);
+  useEffect(() => {
+    getActiveAnnouncements()
+      .then(setItems)
+      .catch(() => setItems([]));
+  }, []);
+  if (dismissed || items.length === 0) return null;
+  const a = items[0];
+  return (
+    <div className={`announcement ${a.priority === "high" ? "high" : ""}`} role="status">
+      <div className="container announcement-inner">
+        <span>
+          <b>{a.title}</b>
+          {a.body && ` — ${a.body}`}
+        </span>
+        <button type="button" className="announcement-close" aria-label="Dismiss announcement" onClick={() => setDismissed(true)}>
+          ×
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const { info, ministries, events } = useOutletContext();
-  const [branches, setBranches] = useState(null);
-  const [sermons, setSermons] = useState(null);
-  const location = useLocation();
-  const prefillMessage = location.state?.prefillMessage || "";
+  const [sermon, setSermon] = useState(undefined);
+  const live = useLiveStatus();
 
   useEffect(() => {
-    getBranches().then(setBranches).catch(() => setBranches([]));
     getSermons()
-      .then((list) => setSermons(list.slice(0, 3)))
-      .catch(() => setSermons([]));
+      .then((list) => setSermon(list[0] || null))
+      .catch(() => setSermon(null));
   }, []);
 
-  const provinceCount = branches
-    ? new Set(branches.filter((b) => b.province).map((b) => b.province)).size
-    : 0;
+  const upcoming = events.filter((e) => isUpcoming(e)).slice(0, 4);
+  const paragraphs = (info?.mission || "").split(/\n+/).filter(Boolean).slice(0, 3);
+  const photo = info?.founder_photo || info?.church_photo;
+  const hasLive = !!(live?.is_live || live?.embed_url);
 
   return (
     <>
+      <AnnouncementBanner />
       <Hero info={info} />
-      <AboutChurch info={info} />
-      <AboutFounder info={info} />
-      <Ministries ministries={ministries} />
-      <Events info={info} events={events} />
+      <ServiceStrip services={info?.service_times} />
 
-      <section className="section teaser-section">
-        <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">Recent messages</span>
-            <h2>Latest Sermons</h2>
+      <section className="section">
+        <div className="container twocol">
+          <div className="media">
+            {photo ? (
+              <img src={mediaUrl(photo)} alt={info?.founder_name || info?.name} />
+            ) : (
+              <div className="placeholder">Photo coming soon</div>
+            )}
           </div>
-          {sermons && sermons.length > 0 ? (
-            <>
-              <div className="sermon-grid">
-                {sermons.map((s) => (
-                  <SermonCard key={s.id} sermon={s} />
-                ))}
-              </div>
-              <p style={{ marginTop: 16 }}>
-                <Link to="/sermons">See all sermons →</Link>
-              </p>
-            </>
-          ) : (
-            <p className="empty-note">
-              The sermons library is empty for now. <Link to="/sermons">Visit the Sermons page</Link>.
-            </p>
-          )}
-        </div>
-      </section>
-
-      <section className="section alt teaser-section">
-        <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">Find us near you</span>
-            <h2>Our Branches</h2>
-          </div>
-          {branches && branches.length > 0 ? (
+          <div className="text">
+            <span className="eyebrow">Welcome</span>
+            <h2>A home for every generation</h2>
+            {paragraphs.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
             <p>
-              {branches.length} {branches.length === 1 ? "branch" : "branches"}
-              {provinceCount > 0 ? ` across ${provinceCount} ${provinceCount === 1 ? "province" : "provinces"}` : ""}.{" "}
-              <Link to="/locations">Find a location near you</Link>.
+              <Link to="/about" className="btn-chip">
+                Read More
+              </Link>
             </p>
-          ) : (
-            <p className="empty-note">
-              Branch locations coming soon. <Link to="/locations">Find a Location</Link>.
-            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section alt">
+        <div className="container">
+          <div className="section-head">
+            <span className="eyebrow">Latest message</span>
+            <h2>Latest Sermon</h2>
+          </div>
+          {sermon === undefined && <SkeletonCards count={1} />}
+          {sermon === null && <p className="empty-note">No sermons available yet. Check back soon for new messages.</p>}
+          {sermon && (
+            <div className="sermon-grid">
+              <SermonCard sermon={sermon} />
+            </div>
           )}
         </div>
       </section>
 
-      <Give info={info} />
-      <Contact info={info} prefillMessage={prefillMessage} />
+      <section className="section">
+        <div className="container">
+          <div className="section-head">
+            <span className="eyebrow">What's on</span>
+            <h2>Upcoming Events</h2>
+          </div>
+          {upcoming.length === 0 && <p className="empty-note">No upcoming events.</p>}
+          <div className="card-grid snap-row">
+            {upcoming.map((e) => (
+              <EventCard key={e.id} event={e} />
+            ))}
+          </div>
+          <p style={{ marginTop: 18 }}>
+            <Link to="/events">See all events →</Link>
+          </p>
+        </div>
+      </section>
+
+      <section className="section alt">
+        <div className="container">
+          <div className="section-head">
+            <span className="eyebrow">Get involved</span>
+            <h2>Ministries</h2>
+          </div>
+          {ministries.length === 0 && <p className="empty-note">No ministries listed yet.</p>}
+        </div>
+        <MinistryMarquee ministries={ministries} />
+        <div className="container">
+          <p style={{ marginTop: 18 }}>
+            <Link to="/ministries">See all ministries →</Link>
+          </p>
+        </div>
+      </section>
+
+      {hasLive && (
+        <section className="cta-band">
+          <div className="container cta-inner">
+            <div>
+              <h3>Join Us Live</h3>
+              <p>{live.is_live ? `Live now: ${live.title}` : "Watch our services online."}</p>
+            </div>
+            <Link to="/live" className="btn btn-primary">
+              Watch Live
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {info?.location && (
+        <section className="section">
+          <div className="container">
+            <div className="section-head">
+              <span className="eyebrow">Visit us</span>
+              <h2>Location</h2>
+              <p>{info.location}</p>
+            </div>
+            <MapEmbed address={info.location} title="Church location" />
+            <p style={{ marginTop: 14 }}>
+              <a className="btn btn-outline on-light" href={directionsUrl(info.location)} target="_blank" rel="noreferrer">
+                Get Directions
+              </a>
+            </p>
+          </div>
+        </section>
+      )}
     </>
   );
 }

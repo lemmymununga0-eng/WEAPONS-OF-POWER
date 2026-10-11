@@ -25,6 +25,9 @@ from .routes import (
     branches,
     clusters,
     livestream,
+    public_content,
+    admin_content,
+    users,
 )
 from . import uploads as uploads_module
 
@@ -56,6 +59,9 @@ app.include_router(service_times.router)
 app.include_router(branches.router)
 app.include_router(clusters.router)
 app.include_router(livestream.router)
+app.include_router(public_content.router)
+app.include_router(admin_content.router)
+app.include_router(users.router)
 
 
 @app.on_event("startup")

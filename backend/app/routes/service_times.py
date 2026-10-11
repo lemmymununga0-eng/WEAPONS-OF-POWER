@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import ServiceTime, AdminUser
 from ..schemas import ServiceTimeOut, ServiceTimeIn, ServiceTimeReorderIn
-from ..auth import get_current_admin
+from ..auth import require_admin
 
 router = APIRouter(prefix="/api/service-times", tags=["service-times"])
 
@@ -16,7 +16,7 @@ router = APIRouter(prefix="/api/service-times", tags=["service-times"])
 def create_service_time(
     payload: ServiceTimeIn,
     db: Session = Depends(get_db),
-    _admin: AdminUser = Depends(get_current_admin),
+    _admin: AdminUser = Depends(require_admin),
 ):
     st = ServiceTime(**payload.model_dump())
     db.add(st)
@@ -30,7 +30,7 @@ def update_service_time(
     service_time_id: int,
     payload: ServiceTimeIn,
     db: Session = Depends(get_db),
-    _admin: AdminUser = Depends(get_current_admin),
+    _admin: AdminUser = Depends(require_admin),
 ):
     st = db.get(ServiceTime, service_time_id)
     if not st:
@@ -46,7 +46,7 @@ def update_service_time(
 def delete_service_time(
     service_time_id: int,
     db: Session = Depends(get_db),
-    _admin: AdminUser = Depends(get_current_admin),
+    _admin: AdminUser = Depends(require_admin),
 ):
     st = db.get(ServiceTime, service_time_id)
     if not st:
@@ -60,7 +60,7 @@ def delete_service_time(
 def reorder_service_times(
     payload: ServiceTimeReorderIn,
     db: Session = Depends(get_db),
-    _admin: AdminUser = Depends(get_current_admin),
+    _admin: AdminUser = Depends(require_admin),
 ):
     """Sets sort_order to match the position of each id in the given list."""
     for index, service_time_id in enumerate(payload.ids):

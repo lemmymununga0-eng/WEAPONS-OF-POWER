@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { adminLogin } from "../api/client.js";
 import { useAuth } from "../auth/AuthContext.jsx";
 import Logo from "../components/Logo.jsx";
@@ -56,6 +56,9 @@ export default function AdminLogin() {
         <button className="btn btn-primary" type="submit" disabled={busy}>
           {busy ? "Signing in…" : "Sign In"}
         </button>
+        <Link to="/" className="login-back-link">
+          ← Back to website
+        </Link>
       </form>
     </div>
   );

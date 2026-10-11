@@ -1,7 +1,16 @@
 import { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import PublicLayout from "./layout/PublicLayout.jsx";
 import Home from "./pages/Home.jsx";
+import AboutPage from "./pages/AboutPage.jsx";
+import MinistriesPage from "./pages/MinistriesPage.jsx";
+import ServicesPage from "./pages/ServicesPage.jsx";
+import EventDetailPage from "./pages/EventDetailPage.jsx";
+import MinistryDetailPage from "./pages/MinistryDetailPage.jsx";
+import MediaPage from "./pages/MediaPage.jsx";
+import PrayerPage from "./pages/PrayerPage.jsx";
+import GivePage from "./pages/GivePage.jsx";
+import ContactPage from "./pages/ContactPage.jsx";
 import EventsPage from "./pages/EventsPage.jsx";
 import SermonsPage from "./pages/SermonsPage.jsx";
 import SermonDetailPage from "./pages/SermonDetailPage.jsx";
@@ -20,6 +29,12 @@ import AdminBranchesPage from "./admin/pages/AdminBranchesPage.jsx";
 import AdminLivestreamPage from "./admin/pages/AdminLivestreamPage.jsx";
 import AdminMessagesPage from "./admin/pages/AdminMessagesPage.jsx";
 import AdminAccountPage from "./admin/pages/AdminAccountPage.jsx";
+import AdminLeadersPage from "./admin/pages/AdminLeadersPage.jsx";
+import AdminAnnouncementsPage from "./admin/pages/AdminAnnouncementsPage.jsx";
+import AdminMediaPage from "./admin/pages/AdminMediaPage.jsx";
+import AdminPrayerPage from "./admin/pages/AdminPrayerPage.jsx";
+import AdminUsersPage from "./admin/pages/AdminUsersPage.jsx";
+import RoleGate from "./admin/RoleGate.jsx";
 import RequireAuth from "./admin/RequireAuth.jsx";
 import { AuthProvider } from "./auth/AuthContext.jsx";
 
@@ -46,7 +61,7 @@ function ScrollManager() {
         return;
       }
       attempts += 1;
-      if (attempts < 30) frame = requestAnimationFrame(tryScroll);
+      if (attempts < 150) frame = requestAnimationFrame(tryScroll);
     };
 
     tryScroll();
@@ -63,6 +78,16 @@ export default function App() {
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/ministries" element={<MinistriesPage />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/giving" element={<GivePage />} />
+          <Route path="/give" element={<Navigate to="/giving" replace />} />
+          <Route path="/prayer" element={<PrayerPage />} />
+          <Route path="/media" element={<MediaPage />} />
+          <Route path="/events/:id" element={<EventDetailPage />} />
+          <Route path="/ministries/:id" element={<MinistryDetailPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/sermons" element={<SermonsPage />} />
           <Route path="/sermons/:id" element={<SermonDetailPage />} />
@@ -80,13 +105,18 @@ export default function App() {
           }
         >
           <Route path="/admin" element={<AdminOverviewPage />} />
-          <Route path="/admin/church-info" element={<AdminChurchInfoPage />} />
+          <Route path="/admin/church-info" element={<RoleGate access="admin"><AdminChurchInfoPage /></RoleGate>} />
           <Route path="/admin/ministries" element={<AdminMinistriesPage />} />
           <Route path="/admin/events" element={<AdminEventsPage />} />
           <Route path="/admin/sermons" element={<AdminSermonsPage />} />
-          <Route path="/admin/branches" element={<AdminBranchesPage />} />
-          <Route path="/admin/livestream" element={<AdminLivestreamPage />} />
-          <Route path="/admin/messages" element={<AdminMessagesPage />} />
+          <Route path="/admin/leadership" element={<RoleGate access="admin"><AdminLeadersPage /></RoleGate>} />
+          <Route path="/admin/announcements" element={<AdminAnnouncementsPage />} />
+          <Route path="/admin/media" element={<AdminMediaPage />} />
+          <Route path="/admin/prayer-requests" element={<RoleGate access="admin"><AdminPrayerPage /></RoleGate>} />
+          <Route path="/admin/branches" element={<RoleGate access="admin"><AdminBranchesPage /></RoleGate>} />
+          <Route path="/admin/livestream" element={<RoleGate access="admin"><AdminLivestreamPage /></RoleGate>} />
+          <Route path="/admin/messages" element={<RoleGate access="admin"><AdminMessagesPage /></RoleGate>} />
+          <Route path="/admin/users" element={<RoleGate access="super"><AdminUsersPage /></RoleGate>} />
           <Route path="/admin/account" element={<AdminAccountPage />} />
         </Route>
       </Routes>
