@@ -23,7 +23,14 @@ elif SQLALCHEMY_DATABASE_URL.startswith("postgresql://"):
     SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
 
 is_sqlite = SQLALCHEMY_DATABASE_URL.startswith("sqlite")
-connect_args = {"check_same_thread": False} if is_sqlite else {"sslmode": "require"}
+if is_sqlite:
+    connect_args = {"check_same_thread": False}
+else:
+    connect_args = {"sslmode": "require"}
+    # Supabase's pooler (port 6543) runs in transaction mode, which does not
+    # support server-side prepared statements.
+    if ":6543/" in SQLALCHEMY_DATABASE_URL:
+        connect_args["prepare_threshold"] = None
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -45,29 +52,31 @@ def sync_schema() -> None:
     create_all only creates missing *tables*, never alters existing ones —
     this covers the common "one new nullable column" case without needing
     a full migration tool for a site this size.
+
+    Kept to one connection and one backfill statement per table: against a
+    remote database every statement is a network round trip.
     """
     inspector = inspect(engine)
-    for table in Base.metadata.sorted_tables:
-        if not inspector.has_table(table.name):
-            continue
-        existing_columns = {col["name"] for col in inspector.get_columns(table.name)}
-        for column in table.columns:
-            default = column.default.arg if column.default is not None else None
-            has_scalar_default = default is not None and not callable(default)
-
-            with engine.begin() as conn:
+    with engine.begin() as conn:
+        for table in Base.metadata.sorted_tables:
+            if not inspector.has_table(table.name):
+                continue
+            existing_columns = {col["name"] for col in inspector.get_columns(table.name)}
+            defaults = {}
+            for column in table.columns:
                 if column.name not in existing_columns:
                     col_type = column.type.compile(dialect=engine.dialect)
                     conn.execute(text(f"ALTER TABLE {table.name} ADD COLUMN {column.name} {col_type}"))
+                default = column.default.arg if column.default is not None else None
+                if default is not None and not callable(default):
+                    defaults[column.name] = default
 
-                # ALTER TABLE only sets the DB-level default for *new* rows,
-                # and a column can also be left NULL by an older app version
-                # or a partial migration — so backfill NULLs unconditionally
-                # (a no-op once every row is already filled in) to match the
-                # model's Python-side default (schemas.py expects non-null
-                # strings).
-                if has_scalar_default:
-                    conn.execute(
-                        text(f"UPDATE {table.name} SET {column.name} = :default WHERE {column.name} IS NULL"),
-                        {"default": default},
-                    )
+            # ALTER TABLE only sets the DB-level default for *new* rows, and a
+            # column can also be left NULL by an older app version or a partial
+            # migration, so backfill NULLs to match the model's Python-side
+            # default (schemas.py expects non-null strings). A no-op once every
+            # row is filled in.
+            if defaults:
+                assignments = ", ".join(f"{name} = COALESCE({name}, :{name})" for name in defaults)
+                any_null = " OR ".join(f"{name} IS NULL" for name in defaults)
+                conn.execute(text(f"UPDATE {table.name} SET {assignments} WHERE {any_null}"), defaults)

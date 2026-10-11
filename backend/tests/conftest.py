@@ -8,6 +8,7 @@ at import time and app/uploads.py resolves its directory at import time.
 import os
 import tempfile
 
+os.environ["WOPMI_SKIP_DOTENV"] = "1"  # never read the real backend/.env during tests
 _tmp_root = tempfile.mkdtemp(prefix="wopmi-test-")
 os.environ["DATABASE_URL"] = f"sqlite:///{os.path.join(_tmp_root, 'test.db')}"
 os.environ["UPLOADS_DIR"] = os.path.join(_tmp_root, "uploads")
