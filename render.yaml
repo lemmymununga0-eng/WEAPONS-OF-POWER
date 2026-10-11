@@ -1,0 +1,26 @@
+# Render Blueprint for the API. Create it with: Render dashboard > New > Blueprint > pick this repo.
+# The website itself goes on Vercel (see DEPLOY.md).
+services:
+  - type: web
+    name: wopmi-api
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      # Signs admin login tokens. Render generates a random value once.
+      - key: SECRET_KEY
+        generateValue: true
+      # Supabase / Postgres connection string. Paste it in the Render dashboard.
+      - key: DATABASE_URL
+        sync: false
+      # The website's address on Vercel, e.g. https://wopmi.vercel.app (no trailing slash).
+      - key: ALLOWED_ORIGINS
+        sync: false
+      # Used only when the database has no admin yet. Pick a strong password.
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
